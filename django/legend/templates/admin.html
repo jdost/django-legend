@@ -1,0 +1,36 @@
+<html>
+	<head>
+		<title>LoJ Admin Interface</title>
+		
+<!--  Scripts for the page, specific to Admin -->
+		<script language="javascript" src="/scripts/lib/jquery.js" type="text/javascript"></script>
+		<!--script language="javascript" src="/scripts/lib/jquery.jcrop.js" type="text/javascript"></script-->
+		<script language="javascript" src="/scripts/admin.js" type="text/javascript"></script>
+<!--  Styles for the page, specific to Admin -->
+		<link rel="stylesheet" type="text/css" href="{% url style.views.admin %}">
+
+	</head>
+	<body>
+		<ul id="nav">
+			<li id="status">&nbsp;</li>
+		</ul>
+		
+		<h1>Legend of Jeff Admin</h1>
+		
+		<ul id="sub-nav">
+		</ul>
+		
+		<div id="body">
+			<form id="login">
+				<input id="adminLoginName" type="text"></input>
+				<input id="adminLoginPass" type="password"></input>
+				<a id="adminLoginSubmit" href="javascript:;">Login</a>
+			</form>
+		</div>
+		{% if pass %}
+		<script language="javascript" type="text/javascript">
+			login();
+		</script>
+		{% endif %}
+	</body>
+</html>

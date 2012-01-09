@@ -1,0 +1,56 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+{% load style %}
+{% load comm %}
+<html>
+<head>
+<title>Jeff | {{ pagename }}</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+
+<!--  Scripts for the page, specific to Journal -->
+	<script language="javascript" src="/scripts/lib/jquery.js" type="text/javascript"></script>
+	
+	<script language="javascript" src="/scripts/calendar.js" type="text/javascript"></script>
+	<script language="javascript" src="/scripts/clean.js" type="text/javascript"></script>
+<!-- Style sheets for the page, one generic, one page specific -->
+	<link rel="stylesheet" type="text/css" href="{% url style.views.main %}">
+	<link rel="stylesheet" type="text/css" href="{% url style.views.journal %}">
+<!-- Other links, including the favicon and the rss feed url -->
+	<link rel="shortcut icon" href="/style/img/favicon.ico">
+	<link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="/rss">
+
+</head>
+
+<!-- The onLoad for the body is the AJAX initialization for the specific page -->
+<body>
+<!-- The header tags, for the upper section of the page that stays pretty static between pages -->
+	{% include "head.html" %}
+<!-- The body section, contains the page specific information -->
+	<div id="body">
+<!-- The sidebar, this contains various sidebar modules placed to the right of the main content -->
+		<div id="sidebar">		
+			{% include "tagbar.html" %}
+			{% include "calbar.html" %}
+		</div>
+
+<!-- The main content, this is the beginning of the actual joural entry(ies) -->
+		<div id="content">
+			{% for e in entrylist %}<div class="entry">
+				<div class="info">
+               <h3><a href="{% url journal.views.single e.url %}">{{ e.title }}</a></h3>
+                  <div class="date">
+                        <span class="month">{{ e.date|date:"b" }}</span>
+                        <span class="day">{{ e.date|date:"d" }}</span>
+                    </div>
+                </div>
+
+				<p>{{ e.content|style }}</p>
+			</div>
+			{% endfor %}
+		</div>
+	</div>
+<!-- The footer, this contains some general information and extra content about the site -->
+   	<div id="footer">
+	</div>
+</body>
+</html>

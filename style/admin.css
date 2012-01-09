@@ -1,0 +1,154 @@
+body {
+	background: black;
+	margin: 0; padding: 0;
+}
+div#body {
+	background: white;
+	width: 1000px;
+	padding: 0; margin: 0 auto;
+	border-left: 4px solid #333;
+	border-right: 4px solid #333;
+	border-bottom: 4px solid #333;
+}
+ul#nav {
+	display: block;
+	height: 19px;
+	position: relative;
+	left: 0; right: 0;
+	background: #333;
+	margin: 0; padding: 0 300px 0 0;
+	font-family: Tahoma;
+	text-align: right;
+}
+ul#nav li#status, ul#nav li#status:hover {
+	position: absolute;
+	top: 0;
+	left:15px;
+	display: inline;
+	list-style: none;
+	color: #FFF;
+	background: #333;
+	cursor: default;
+}
+ul#nav li {
+	display: inline;
+	list-style: none;
+	color: #FFF;
+	margin: 0 10px 0 0;
+	padding: 0 5px;
+	cursor: pointer;
+}
+ul#nav li:hover {
+	background: #CCC;
+	color: black;
+}
+ul#sub-nav {
+	display: block;
+	height: 19px;
+	width: 958px;
+	margin: 0 auto; padding: 0 0 0 50px;
+	background: #333;
+}
+ul#sub-nav li {
+	display: inline;
+	list-style: none;
+	color: white;
+	margin: 0 10px 0 0;
+	padding: 0 5px;
+	font-family: Tahoma;
+	cursor: pointer;
+}
+ul#sub-nav li:hover {
+	background: #CCC;
+	color: black;
+}
+h1 {
+	text-indent: -9999px;
+	background: url(head_admin.png);
+	width: 1000px;	height: 300px;
+	padding: 0; margin: 0 auto;
+	border-left: 4px solid #333;
+	border-right: 4px solid #333;
+}
+/** Login Styles **/
+#body form#login {
+	position: relative;
+	width: 500px;
+	margin: 0 auto;
+	padding: 40px 0;
+}
+#body input#adminLoginName, #body input#adminLoginPass {
+	font-size: 24px; text-align: center;
+	color: grey;
+	background: #CCC;
+	border: 0;
+	margin: 3px; padding: 2px;
+	width: 80%;
+}
+#body a#adminLoginSubmit {
+	text-decoration: none;
+	font-size:30px;
+	display: block;
+	text-align: right;
+	margin: 0 50px;
+	color: #333;
+	font-family: Tahoma;
+}
+/** Journal Styles **/
+#body input#journalEntryTitle {
+	margin: 20px 100px 5px;
+	width: 800px;
+	color: grey;
+	background: #CCC;
+	border: 0;
+	padding: 2px;
+	font-size: 24px; text-align: center;
+}
+#body input#journalEntryTags {
+	margin: 5px 100px;
+	width: 800px;
+	color: grey;
+	background: #CCC;
+	border: 0;
+	padding: 2px;
+	font-size: 20px;
+}
+div#journalTagSuggest {
+	position: absolute;
+	width: 796px; height: 20px;
+	padding: 2px;
+	background: black;
+}
+div#journalTagSuggest a {
+	background: white;
+	color: black;
+	text-decoration: none;
+	margin: 0 4px;
+	font-family: Tahoma;
+}
+#body div#entryEditBar {
+	margin: 0 100px;
+	width: 800px;
+}
+#body div#entryEditBar a {
+	background: #CCC;
+	border: 2px solid #666;
+	color: #666;
+	padding: 2px 4px;
+	margin: 0 10px 0 0;
+	text-decoration: none;
+}
+#body div#entryEditBar a:hover {
+	color: black;
+	border: 2px solid black;
+}
+#body textarea#journalEntry {
+	margin: 5px 100px 20px;
+	width: 800px; height: 300px;
+	color: grey;
+	background: #CCC;
+	border: 0;
+	padding: 2px;
+	font-size: 18px; font-family: Tahoma;
+}
+/** Gallery Styles **/

@@ -1,0 +1,228 @@
+body {
+    margin: 0;
+    padding: 0;
+    font-family: "Estrangelo Edessa", "Franklin Gothic Medium", "Gautami", "Latha", "Microsoft Yi Baiti", "Raavi";
+    letter-spacing: 1px;
+    overflow-x: hidden;
+    background: #5E5E5E;
+}
+table td, table {
+    margin: 0;
+    padding: 0;
+    border: 0;
+}
+
+#header {
+    height: 61px;
+    background-color: #323232;
+    position: relative;
+    right: 0; left: 0;
+}
+    #header h1 {
+        margin: 0;
+        padding: 0;
+        position: absolute;
+        font-size: 27pt;
+        font-weight: normal;
+        height: 43px;
+        color: #FFF;
+        left: 22px;
+        bottom: 0;
+    }
+    #header a {
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        display: block;
+        text-align: right;
+        font-size: 13pt;
+        color: #777;
+        border-bottom-width: 0;
+        border-bottom-style: solid;
+        padding: 0 5px 8px 0;
+        text-decoration: none;
+    }   #header a:hover {
+            color: #FFF;
+            border-bottom-width: 6px;
+            padding: 0 5px 2px 0;
+        }
+    #header a.current {
+        border-bottom-width: 6px;
+        color: #FFF;
+        padding: 0 5px 2px 0;
+    }
+    #header a.spacer {
+        width: 219px;
+        z-index: 5;
+        height: 54px;
+    }   #header a.spacer:hover {
+            border-bottom-width: 0;
+        }
+    #header a.journal {
+        width: 330px;
+        border-bottom-color: #C80000;
+        z-index: 3;
+    }
+    #header a.gallery {
+        width: 504px;
+        border-bottom-color: #0088C8;
+        z-index: 2;
+    }
+    #header a.code {
+        width: 662px;
+        border-bottom-color: #1E8000;
+        z-index: 1;
+    }
+#h-img {
+    height: 210px;
+    text-align: center;
+    right: 0;
+    left: 0;
+    position: relative;
+    background-color: #5E5E5E;
+}
+.img-caption {
+    position: absolute;
+    right: 0;
+    bottom: 20px;
+    background: url(images/50grey.png) repeat;
+    padding: 3px 4px 3px 10px;
+    color: #FFF;
+    cursor: default;
+}
+#sidebar {
+    position: absolute;
+    top: -11px;
+    bottom: -11px;
+    left: 0;
+    width: 156px;
+    background: url(images/50grey.png) repeat;
+    z-index: 10;
+    padding: 24px 0 0;
+}
+    #sidebar h5 {
+        margin: 0 -13px 0 0;
+        padding: 0 15px 0 0;
+        background-color: #4E4E4E;
+        color: white;
+        text-align: right;
+        font-size: 18px;
+        font-weight: normal;
+    }
+    #sidebar ul#tag-list {
+        margin: 2px 4px 0 0;
+        padding: 0;
+        right: 0;
+        list-style: none;
+        text-align: right;
+    }
+        ul#tag-list li {
+            opacity: 0.6;
+            padding: 1px 0 5px;
+        }   ul#tag-list li:hover {
+                opacity: 1.0;
+                cursor: pointer;
+            }
+    #sidebar table#cal-table {
+        border: 0;
+        margin: 0;
+        padding: 0;
+    }
+        table#cal-table table.controls {
+            margin: 0;
+            padding: 0;
+            border: 0;
+            font-size: 8pt;
+            text-align: center;
+        }
+            table#cal-table table.controls td {
+                background: #FFF;
+            }   table#cal-table table.controls td:hover {
+                    background-color: transparent;
+                    cursor: pointer;
+                }
+            table#cal-table table.controls td.current-month {
+                background: transparent;
+            }
+        table#cal-table table.cal-grid {
+            position: relative;
+            top: 0;
+            bottom: 0;
+            width: 100%;
+            height: 100%;
+            font-size: 9pt;
+            text-align: center;
+        }
+            table#cal-table table.cal-grid td {
+                cursor: default;
+            }
+            table#cal-table table.cal-grid td.off-month {
+                color: #838383;
+            }
+#body {
+    position: relative;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    padding: 15px 0 15px 190px;
+    border-top: 11px solid #0088C8;
+    border-bottom: 11px solid #0088C8;
+    z-index: 9;
+    height: 100%;
+    background: #FFF;
+}
+    div.entry div.info {
+        height: 48px;
+        width: 100%;
+        cursor: default;
+    }
+        div.entry div.info div.date {
+            float: right;
+            margin: 3px 0;
+            padding: 0 6px;
+            height: 42px;
+            background: #7E7E7E;
+            color: 1E1E1E;
+            text-align: center;
+            font-weight: normal;
+            position: relative;
+        }
+            div.entry div.info div.date span.month {
+                position: relative;
+                top: 0;
+                font-size: 14px;
+            }
+            div.entry div.info div.date span.day {
+                font-size: 30px;
+                position: absolute;
+                top: 13px;
+                margin: 0;
+                padding: 0;
+                left: 3px;
+                letter-spacing: 2px;
+                line-height: 30px;
+            }
+                div.entry div.info div.date span.day em {
+                    font-style: normal;
+                    color: #ABABAB;
+                }
+        div.entry div.info h3 {
+            float: right;
+            text-align: right;
+            background: #4E4E4E;
+            margin: 3px 0;
+            padding: 4px 8px 1px 6px;
+            color: white;
+            height: 37px;
+            font-size: 27pt;
+            line-height: 36px;
+            font-weight: normal;
+            letter-spacing: 2px;
+        }
+    div.entry p {
+        margin: 10px 20px 26px 8px;
+        text-align: justify;
+        font-size: 18px;
+        line-height: 21px;
+        text-indent: 30px;
+    }
