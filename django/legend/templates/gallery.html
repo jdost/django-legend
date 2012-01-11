@@ -7,39 +7,39 @@
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 
 <!--  Scripts for the page, specific to Journal -->
-	<script language="javascript" src="/scripts/lib/jquery.js" type="text/javascript"></script>
+   <script language="javascript" src="/scripts/lib/jquery.js" type="text/javascript"></script>
 
-	<script language="javascript" src="/scripts/clean.js" type="text/javascript"></script>
+   <script language="javascript" src="/scripts/clean.js" type="text/javascript"></script>
 <!-- Style sheets for the page, one generic, one page specific -->
-	<link rel="stylesheet" type="text/css" href="{% url style.views.main %}">
-	<link rel="stylesheet" type="text/css" href="{% url style.views.gallery %}">
+   <link rel="stylesheet" type="text/css" href="{% url style.views.main %}">
+   <link rel="stylesheet" type="text/css" href="{% url style.views.gallery %}">
 <!-- Other links, including the favicon and the rss feed url -->
-	<link rel="shortcut icon" href="/style/img/favicon.ico">
-	<link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="rss.php">
+   <link rel="shortcut icon" href="/style/img/favicon.ico">
+   <link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="rss.php">
 
 </head>
 
 <!-- The onLoad for the body is the AJAX initialization for the specific page -->
 <body>
 <!-- The header tags, for the upper section of the page that stays pretty static between pages -->
-	{% include "head.html" %}
+   {% include "head.html" %}
 <!-- The body section, contains the page specific information -->
-	<div id="body">
-		<div id="sidebar">		
-			
-		</div>
+   <div id="body">
+      <div id="sidebar">      
+         
+      </div>
 
-		<div id="content">
-			{% for a in albumlist %}
-				<a class="album" href="{{ a.get_absolute_url }}">
-				<h4 class="albumTitle">{{ a.name }}</h4>
-				<span class="albumCnt">{{ a.image_set.count }}</span>
-				<div class="albumDesc">{{ a.description }}</div>
-				<!--img src="/img/{{ a.url }}.jpg" /-->
-				</a>
-			{% endfor %}
-   		<div id="footer">
-		</div>
+      <div id="content">
+         {% for a in albumlist %}
+            <a class="album" href="{{ a.get_absolute_url }}">
+            <h4 class="albumTitle">{{ a.name }}</h4>
+            <span class="albumCnt">{{ a.image_set.count }}</span>
+            <div class="albumDesc">{{ a.description }}</div>
+            <!--img src="/img/{{ a.url }}.jpg" /-->
+            </a>
+         {% endfor %}
+         <div id="footer">
+      </div>
   
 </div>
 </body>

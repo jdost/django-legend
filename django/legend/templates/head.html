@@ -1,21 +1,21 @@
 
 <!-- HEADER ############################################################################################-->
 <div id="header">
-    <h1>Jeff</h1>
-    <a class="spacer">&nbsp;</a>
-	{% if journal %}<a class="journal current" href="/journal/">the writer</a>
-	{% else %}<a class="journal" href="/journal/">the writer</a>
-	{% endif %}	
-	{% if gallery %}<a class="gallery current" href="/gallery/">the photographer</a>
-	{% else %}<a class="gallery" href="/gallery/">the photographer</a>
-	{% endif %}
+   <h1>Jeff</h1>
+   <a class="spacer">&nbsp;</a>
+   {% if journal %}<a class="journal current" href="/journal/">the writer</a>
+   {% else %}<a class="journal" href="/journal/">the writer</a>
+   {% endif %}   
+   {% if gallery %}<a class="gallery current" href="/gallery/">the photographer</a>
+   {% else %}<a class="gallery" href="/gallery/">the photographer</a>
+   {% endif %}
 </div>
 
 <!-- END HEADER ########################################################################################-->
 
 <!-- RANDOM HEADER IMAGE ###############################################################################-->
 <div id="h-img">
-    <img src="{{ header.file }}">
-    <div class="img-caption">{{ header.caption }}</div>
+   <img src="{{ header.file }}">
+   <div class="img-caption">{{ header.caption }}</div>
 </div>
 <!-- END HEADER IMAGE ##################################################################################-->

@@ -1,32 +1,32 @@
 var months = new Array("jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec");
 
 function grabMonth(m, y) {
-	if (y <= 2007 && m <= 12)
-		return new Array();	
-	// Make XML call, eval JSON into buildTable()
-	var URL = "/data/cal/" + m.toString() + "/" + y.toString() + "/";
+   if (y <= 2007 && m <= 12)
+      return new Array();   
+   // Make XML call, eval JSON into buildTable()
+   var URL = "/data/cal/" + m.toString() + "/" + y.toString() + "/";
     
     Request = null;
-	if (window.XMLHttpRequest)
-		Request = new XMLHttpRequest();
-	else if (window.ActiveXObject)
-		Request = new ActiveXObject("Microsoft.XMLHTTP");
-	else
-		return new Array();
-	
-	Request.onreadystatechange = function () {
-		if (Request.readyState == 4) {
-			if (Request.status == 200) {
+   if (window.XMLHttpRequest)
+      Request = new XMLHttpRequest();
+   else if (window.ActiveXObject)
+      Request = new ActiveXObject("Microsoft.XMLHTTP");
+   else
+      return new Array();
+   
+   Request.onreadystatechange = function () {
+      if (Request.readyState == 4) {
+         if (Request.status == 200) {
                 var data = eval("(" + Request.responseText + ")");
-				cal.genGrid(data.Dates);
-			} else
-				return new Array();
-		} else
-			return new Array();
-	};
-	
-	Request.open("GET", URL, true);
-	Request.send(null);
+            cal.genGrid(data.Dates);
+         } else
+            return new Array();
+      } else
+         return new Array();
+   };
+   
+   Request.open("GET", URL, true);
+   Request.send(null);
 }
 
 function Calendar () {
