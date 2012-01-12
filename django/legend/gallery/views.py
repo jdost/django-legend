@@ -10,7 +10,7 @@ def default(request):
    aList = Album.objects.all()
    h = gen_header()
 
-   return render_to_response('gallery.html', {'gallery': True, 'pagename': "Gallery", 
+   return render_to_response('gallery.html', {'gallery': True, 'pagename': "Gallery",
                               'albumlist': aList, 'header': h})
 
 def album(request, album):

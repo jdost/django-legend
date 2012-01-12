@@ -44,7 +44,7 @@ def tag(request, slug, page=0):
          es.append(e)
    h = gen_header()
 
-   return render_to_response('journal.html', {'journal': True, 'pagename': 'Journal: ' + target.name, 
+   return render_to_response('journal.html', {'journal': True, 'pagename': 'Journal: ' + target.name,
       'taglist': ts, 'entrylist': es, 'single': False, 'header': h})
 
 month_names = [ "Jan", "Feb", "Mar", "Apr", "May", "June", "July", "Aug",
