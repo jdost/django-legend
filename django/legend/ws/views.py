@@ -12,7 +12,7 @@ def verify(request):
    code on the server to allow for generating this cookie, should hold indefinitely
    '''
    if VERIFY:
-      #set cookie
+      d = 1#set cookie
 
    return 200
 
@@ -24,7 +24,7 @@ def isVerified(req):
    return True
 
 def format(data):
-   return HttpResponse(json.loads(data), mimetype="application/json")
+   return HttpResponse(json.dumps(data), mimetype="application/json")
 def slugify(base):
    return base.lower().replace(" ", "_").replace(",", "")
 
@@ -60,7 +60,7 @@ class Entry(View):
       if request.POST:
          return format(self.post(request, id))
       else:
-         return format(self.get(reqeust, id))
+         return format(self.get(request, id))
 
    def get(self, request, id):
       resp = {}
@@ -69,8 +69,8 @@ class Entry(View):
          entry_set = journal.Journal.objects.all()
          for entry in entry_set:
             resp["entries"].append({
-                  "title": entry.title,
-               ,  "date" entry.data.isoformat()
+                  "title": entry.title
+               ,  "date": entry.date.isoformat()
                ,  "id": entry.id
                })
       else:
@@ -101,7 +101,7 @@ class Entry(View):
          if entry.title != post["title"]:
             entry.title = post["title"]
             entry.url = slugify(entry.title)
-         if entry.content != post["content"]
+         if entry.content != post["content"]:
             entry.content = post["content"]
 
          # tags
