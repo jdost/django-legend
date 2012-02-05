@@ -5,4 +5,5 @@ urlpatterns = patterns('ws.views',
    (r'^$', 'list'),
    (r'^entry/$', 'Entry'),
    (r'^entry/(?P<id>\d*)/$', 'Entry'),
+   (r'^tags/$', 'Tag'),
 )
