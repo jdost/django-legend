@@ -6,7 +6,7 @@
    var self
      , LOCS = {
       ENTRY      : "/ws/entry/"
-   ,  TAG_LIST   : "/ws/tags/"
+   ,  TAGS       : "/ws/tags/"
    }
      , handler
      , container
@@ -101,7 +101,7 @@
          settings.callback(response.data.tags);
       };
       handler.request({
-         target   : LOCS.TAG_LIST
+         target   : LOCS.TAGS
       ,  callback : settings.callback === null ? null : parseData
       });
    })
