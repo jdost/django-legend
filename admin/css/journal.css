@@ -7,24 +7,32 @@ button:active {
    position: relative;
    top: 1px;
 }
+button sup {
+   position: absolute;
+   font-size: 0.7em;
+}
 /* BLUE */
+.journal.tagEditor .entry .toggle.tagged,
 .journal.browser .filter button.active {
    color: #D9EEF7;
    border: solid 1px #0076A3;
    background: #0095CD;
    background: -webkit-gradient(linear, left top, left bottom, from(#00ADEE), to(#0078A5));
 }
+.journal.tagEditor .entry .toggle.tagged:hover,
 .journal.browser .filter button.active:hover {
    background: #007EAD;
    background: -webkit-gradient(linear, left top, left bottom, from(#0085CC), to(#00678E));
 }
+.journal.tagEditor .entry .toggle.tagged:active,
 .journal.browser .filter button.active:active {
-   background: #80BED6;
+   color: #80BED6;
    background: -webkit-gradient(linear, left top, left bottom, from(#0078A5), to(#00ADEE));
 }
 
 /* GREEN */
 .journal.browser button.newEntry,
+.journal.tagEditor .saver,
 .journal.editor .buttons button[name=send] {
    color: #E8F0DE;
    border: solid 1px #538312;
@@ -32,11 +40,13 @@ button:active {
    background: -webkit-gradient(linear, left top, left bottom, from(#7DB72F), to(#4E7D0E));
 }
 .journal.browser button.newEntry:active,
+.journal.tagEditor .saver:active,
 .journal.editor .buttons button[name=send]:active {
-   background: #A9C08C;
+   color: #A9C08C;
    background: -webkit-gradient(linear, left top, left bottom, from(#4E7D0E), to(#7DB72F));
 }
 .journal.browser button.newEntry:hover,
+.journal.tagEditor .saver:hover,
 .journal.editor .buttons button[name=send]:hover {
    background: #538018;
    background: -webkit-gradient(linear, left top, left bottom, from(#6B9D28), to(#436B0C));
@@ -60,12 +70,13 @@ button:active {
 .journal.browser .entry button.delete:active,
 .journal.editor .buttons button[name=cancel]:active,
 .journal.tagList .tag button.delete:active {
-   background: #DE898C;
+   color: #DE898C;
    background: -webkit-gradient(linear, left top, left bottom, from(#AA1317), to(#ED1C24));
 }
 
 /* ORANGE */
 .journal.browser .entry button.edit,
+.journal.tagEditor .sort button.active,
 .journal.tagList .tag button.addRemove {
    color: #FEF4E9;
    border: solid 1px #DA7C0C;
@@ -73,30 +84,51 @@ button:active {
    background: -webkit-gradient(linear, left top, left bottom, from(#FAA51A), to(#F47A20));
 }
 .journal.browser .entry button.edit:hover,
+.journal.tagEditor .sort button.active:hover,
 .journal.tagList .tag button.addRemove:hover {
    background: #F47C20;
    background: -webkit-gradient(linear, left top, left bottom, from(#F88E11), to(#F06015));
 }
 .journal.browser .entry button.edit:active,
+.journal.tagEditor .sort button.active:active,
 .journal.tagList .tag button.addRemove:active {
-   background: #FCD3A5;
+   color: #FCD3A5;
    background: -webkit-gradient(linear, left top, left bottom, from(#F47A20), to(#FAA51A));
 }
 
 /* WHITE */
+.journal.tagEditor .entry .toggle,
 .journal.browser .filter button {
    color: #606060;
    border: solid 1px #B7B7B7;
    background: #FFF;
    background: -webkit-gradient(linear, left top, left bottom, from(#FFF), to(#EDEDED));
 }
+.journal.tagEditor .entry .toggle:active,
 .journal.browser .filter button:active {
-   background: #999;
+   color: #999;
    background: -webkit-gradient(linear, left top, left bottom, from(#EDEDED), to(#FFF));
 }
+.journal.tagEditor .entry .toggle:hover,
 .journal.browser .filter button:hover {
    background: #EDEDED;
    background: -webkit-gradient(linear, left top, left bottom, from(#FFF), to(#DCDCDC));
+}
+
+/* GREY */
+.journal.tagEditor .sort button {
+   color: #E9E9E9;
+   border: 1px solid #555;
+   background: #6E6E6E;
+   background: -webkit-gradient(linear, left top, left bottom, from(#888), to(#575757));
+}
+.journal.tagEditor .sort button:hover {
+   background: #616161;
+   background: -webkit-gradient(linear, left top, left bottom, from(#757575), to(#4B4B4B));
+}
+.journal.tagEditor .sort button:active {
+   color: #AFAFAF;
+   background: -webkit-gradient(linear, left top, left bottom, from(#EDEDED), to(#FFF));
 }
 
 /******************************************************************************************************************/
@@ -241,3 +273,61 @@ button:active {
    clear: both;
 }
 
+/******************************************************************************************************************/
+.journal.tagEditor {
+   text-align: right;
+}
+.journal.tagEditor .sort {
+   text-align: left;
+   margin: 1px 0 3px;
+}
+.journal.tagEditor .sort button {
+   padding: 1px 5px;
+   font-size: 0.7em;
+   font-family: 'Ubuntu', sans-serif;
+   border-radius: 0.2em;
+}
+.journal.tagEditor .sort button.stateSorter {
+   margin: 0 7px;
+}
+.journal.tagEditor .sort button.dateSorter {
+   margin: 0 5px;
+}
+.journal.tagEditor .sort button.titleSorter {
+   margin: 0 35px;
+}
+.journal.tagEditor .entry {
+   color: #999;
+}
+.journal.tagEditor .entry:hover {
+   color: white;
+   cursor: pointer;
+}
+.journal.tagEditor .entry span.date,
+.journal.tagEditor .entry span.title {
+   float: left;
+   display: block;
+}
+.journal.tagEditor .entry span.date {
+   padding: 0 25px 0 10px;
+}
+.journal.tagEditor .entry .clear {
+   clear: both;
+}
+.journal.tagEditor .entry .toggle {
+   float: left;
+   margin: 2px 15px;
+   padding: 1px 15px;
+   width: 70px;
+   border-radius: 0.4em;
+   font-size: 0.9em;
+   font-family: 'Ubuntu', sans-serif;
+}
+.journal.tagEditor .saver {
+   position: relative;
+   right: 25px;
+   padding: 5px 15px;
+   border-radius: 0.5em;
+   font-size: 1.1em;
+   font-family: 'Ubuntu', sans-serif;
+}
