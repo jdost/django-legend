@@ -11,7 +11,7 @@
      , card
      , tags
      , setup = function () {
-      utils.loaded("journal.tags");
+      utils.loaded({ name: "journal.tags" });
    }
      , build = def({
       "handler" : null
@@ -78,14 +78,24 @@
       return node;
    }
      , addRemove = function (tag) {
+      utils.require({
+            name: "journal.tagEditor"
+         ,  path: "journal.tagEditor"
+         ,  callback: function () {
+               journal.tagEditor.build({
+                  tag     : tag.id
+               ,  handler : handler
+               });
+            }
+         });
    }
      , deleteTag = function (tag) {
    }
      ;
 
-   $(document).ready(setup);
-
    window.journal.tags = {
       build : build
    };
+
+   $(document).ready(setup);
 }) ();

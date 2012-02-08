@@ -201,6 +201,63 @@
       ,  type     : 'POST'//'PUT' - PUT does not have a natural queryDict in Django, this is a simple workaround, for now
       });
    })
+     , getTagInfo = def({
+      "id"       : null
+   ,  "callback" : null
+   }, function (settings) {
+      if (settings.id === null) {
+         return;
+      }
+
+      var parseData = function (response) {
+         if (response.error) {
+            notify.add({
+               name    : "tagReqFailed"
+            ,  message : "Tag Request failed: " + response.error
+            ,  classes : "error"
+            });
+            return;
+         }
+
+         for (var i = 0, l = response.data.entries.length; i < l; i++) {
+            var entry = response.data.entries[i];
+            response.data.entries[i].date = new Date(entry.date);
+         }
+
+         settings.callback === null ? null : settings.callback(response.data);
+      };
+
+      handler.request({
+         target   : LOCS.TAGS + settings.id.toString() + "/"
+      ,  callback : parseData
+      });
+   })
+     , updateTag = def({
+      "tag"  : null
+   ,  "data" : null
+   }, function (settings) {
+      if (settings.tag === null) {
+         return;
+      }
+
+      var notifier = function (response) {
+         notify.add({
+            name    : "tagUpdated"
+         ,  message : "Tag Update: " + (response.error ? "failed" : "succeeded")
+         ,  classes : response.error ? "error" : "success"
+         });
+      };
+
+      settings.data.additions = JSON.stringify(settings.data.additions);
+      settings.data.removals = JSON.stringify(settings.data.removals);
+
+      handler.request({
+         target   : LOCS.TAGS + settings.tag + "/"
+      ,  data     : settings.data
+      ,  type     : 'POST'
+      ,  callback : notifier
+      });
+   })
      , deleteEntry
      , hInterface = {
       loadEntries : getEntryList
@@ -209,12 +266,15 @@
    ,  addEntry    : createEntry
 
    ,  getTags     : getTagList
+   ,  loadTag     : getTagInfo
+   ,  updateTag   : updateTag
    }
      ;
 
    self = window.journal = {
       load : load
    };
+
    $(document).ready(setup);
 })();
 

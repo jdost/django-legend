@@ -13,9 +13,7 @@
      , entries = []
      , table
      , setup = function () {
-      utils.require({ name: "journal.editor", path: "journal.editor" });
-
-      utils.loaded("journal.browser");
+      utils.loaded({ name: "journal.browser" });
    }
      , build = def({
       "container" : null
@@ -159,9 +157,6 @@
                   return (a.date.valueOf() - b.date.valueOf()) * sbDate.state;
                };
 
-               for (var i = 0, l = entries.length; i < l; i++) {
-                  entries[i].node.remove();
-               }
                entries.sort(sort);
                for (var i = 0, l = entries.length; i < l; i++) {
                   table.append(entries[i].node);
@@ -197,9 +192,6 @@
                   return sbTitle.state*res;
                };
 
-               for (var i = 0, l = entries.length; i < l; i++) {
-                  entries[i].node.remove();
-               }
                entries.sort(sort);
                for (var i = 0, l = entries.length; i < l; i++) {
                   table.append(entries[i].node);
@@ -275,10 +267,16 @@
          return;
       }
 
-      journal.editor.build({
-         "entry"     : (settings.entry.id === null ? null : settings.entry)
-      ,  "container" : container
-      ,  "handler"   : handler
+      utils.require({
+         name     : "journal.editor"
+      ,  path     : "journal.editor"
+      ,  callback : function () {
+            journal.editor.build({
+               "entry"     : (settings.entry.id === null ? null : settings.entry)
+            ,  "container" : container
+            ,  "handler"   : handler
+            });
+         }
       });
    })
      , deleteEntry = def({
@@ -291,11 +289,12 @@
    })
      ;
 
-   $(document).ready(setup);
    self = window.journal.browser = {
       build  : build
    ,  reload : loadEntries
    ,  hide   : hideWindow
    ,  show   : showWindow
    };
+
+   $(document).ready(setup);
 })();

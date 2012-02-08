@@ -17,6 +17,7 @@
 
    window.ui.multiselect = def({
       "name"    : ""
+   ,  "label"   : ""
    ,  "options" : []
    ,  "initial" : []
    }, function (settings) {
@@ -28,7 +29,7 @@
       }
         , makeInput = function () {
          var node = $(utils.make("input"))
-            .attr({ type: "text" })
+            .attr({ type: "text" , placeholder: settings.label })
             .addClass("mainInput")
             .focus(activate)
             .keyup(filter)

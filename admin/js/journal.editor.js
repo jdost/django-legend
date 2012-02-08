@@ -11,7 +11,7 @@
      , node
      , card
      , setup = function () {
-      utils.loaded("journal.editor");
+      utils.loaded({ name: "journal.editor" });
    }
 
      , build = def({
@@ -73,10 +73,11 @@
       ,  "value"  : ""
       ,  "type"   : "input"
       }, function (settings) {
-         var value = settings.value.length > 0 ? settings.value : settings.label;
+         var value = settings.value;
          var input = $(utils.make(settings.type === "input" ? "input" : "textarea"))
             .addClass(settings.name)
-            .attr("name", settings.name);
+            .attr("name", settings.name)
+            .attr("placeholder", settings.label);
          input[settings.type === "input" ? "val" : "text"](value);
          return input;
       })
@@ -122,6 +123,7 @@
             }
             inputs.tags = ui.multiselect({
                name    : "tags"
+            ,  label   : "tag"
             ,  initial : entry === null ? [] : entry.tags
             ,  options : tagArray
             });
@@ -154,9 +156,9 @@
       });
    }
      ;
-
-   $(document).ready(setup);
    self = window.journal.editor = {
       build : build
    };
+
+   $(document).ready(setup);
 }) ();
