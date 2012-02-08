@@ -189,4 +189,17 @@ class Tag(View):
       return resp
 
    def post(self, request, id):
-      return {}
+      if id is None :
+         resp = {}
+      else :
+         tag = journal.Tag.objects.get(id=int(id))
+         additions = json.loads(request.POST["additions"])
+         removals = json.loads(request.POST["removals"])
+         for entry_id in additions:
+            entry = journal.Journal.objects.get(id=int(entry_id))
+            entry.tags.add(tag)
+         for entry_id in removals:
+            entry = journal.Journal.objects.get(id=int(entry_id))
+            entry.tags.remove(tag)
+         resp = {}
+      return resp

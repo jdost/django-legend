@@ -52,7 +52,7 @@
       node.append(table);
 
       for (var i = 0, l = entries.length; i < l; i++) {
-         entries[i].node = addEntry(entries[i], i);
+         entries[i].node = addEntry(entries[i]);
          table.append(entries[i].node);
          entries[i].status = entries[i].tagged;
       }
@@ -186,11 +186,11 @@
       }
       card.close();
    }
-     , toggle = function (index) {
-      entries[index].status = !entries[index].status;
-      return entries[index].status;
+     , toggle = function (entry, index) {
+      entry.status = !entry.status;
+      return entry.status;
    }
-     , addEntry = function (entry, i) {
+     , addEntry = function (entry) {
       var short_date = function (d) {
          var zfill = function (n, l) {
             return Array(l - n.toString().length + 1).join("0") + n.toString();
@@ -206,7 +206,7 @@
             .text(entry.tagged ? "Untag" : " Tag ")
             .click(function (event) {
                event.stopPropagation();
-               if (toggle(i)) {
+               if (toggle(entry)) {
                   node.text("Untag").addClass("tagged");
                } else {
                   node.text(" Tag ").removeClass("tagged");
