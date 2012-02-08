@@ -1,0 +1,243 @@
+button {
+   cursor: pointer;
+   text-shadow: 0 1px 1px rgba(0,0,0,0.3);
+   box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+}
+button:active {
+   position: relative;
+   top: 1px;
+}
+/* BLUE */
+.journal.browser .filter button.active {
+   color: #D9EEF7;
+   border: solid 1px #0076A3;
+   background: #0095CD;
+   background: -webkit-gradient(linear, left top, left bottom, from(#00ADEE), to(#0078A5));
+}
+.journal.browser .filter button.active:hover {
+   background: #007EAD;
+   background: -webkit-gradient(linear, left top, left bottom, from(#0085CC), to(#00678E));
+}
+.journal.browser .filter button.active:active {
+   background: #80BED6;
+   background: -webkit-gradient(linear, left top, left bottom, from(#0078A5), to(#00ADEE));
+}
+
+/* GREEN */
+.journal.browser button.newEntry,
+.journal.editor .buttons button[name=send] {
+   color: #E8F0DE;
+   border: solid 1px #538312;
+   background: #64991E;
+   background: -webkit-gradient(linear, left top, left bottom, from(#7DB72F), to(#4E7D0E));
+}
+.journal.browser button.newEntry:active,
+.journal.editor .buttons button[name=send]:active {
+   background: #A9C08C;
+   background: -webkit-gradient(linear, left top, left bottom, from(#4E7D0E), to(#7DB72F));
+}
+.journal.browser button.newEntry:hover,
+.journal.editor .buttons button[name=send]:hover {
+   background: #538018;
+   background: -webkit-gradient(linear, left top, left bottom, from(#6B9D28), to(#436B0C));
+}
+
+/* RED */
+.journal.browser .entry button.delete,
+.journal.editor .buttons button[name=cancel],
+.journal.tagList .tag button.delete {
+   color: #FADDDE;
+   border: solid 1px #980C10;
+   background: #D81B21;
+   background: -webkit-gradient(linear, left top, left bottom, from(#ED1C24), to(#AA1317));
+}
+.journal.browser .entry button.delete:hover,
+.journal.editor .buttons button[name=cancel]:hover,
+.journal.tagList .tag button.delete:hover {
+   background: #B61318;
+   background: -webkit-gradient(linear, left top, left bottom, from(#C9121B), to(#A11115));
+}
+.journal.browser .entry button.delete:active,
+.journal.editor .buttons button[name=cancel]:active,
+.journal.tagList .tag button.delete:active {
+   background: #DE898C;
+   background: -webkit-gradient(linear, left top, left bottom, from(#AA1317), to(#ED1C24));
+}
+
+/* ORANGE */
+.journal.browser .entry button.edit,
+.journal.tagList .tag button.addRemove {
+   color: #FEF4E9;
+   border: solid 1px #DA7C0C;
+   background: #F78D1D;
+   background: -webkit-gradient(linear, left top, left bottom, from(#FAA51A), to(#F47A20));
+}
+.journal.browser .entry button.edit:hover,
+.journal.tagList .tag button.addRemove:hover {
+   background: #F47C20;
+   background: -webkit-gradient(linear, left top, left bottom, from(#F88E11), to(#F06015));
+}
+.journal.browser .entry button.edit:active,
+.journal.tagList .tag button.addRemove:active {
+   background: #FCD3A5;
+   background: -webkit-gradient(linear, left top, left bottom, from(#F47A20), to(#FAA51A));
+}
+
+/* WHITE */
+.journal.browser .filter button {
+   color: #606060;
+   border: solid 1px #B7B7B7;
+   background: #FFF;
+   background: -webkit-gradient(linear, left top, left bottom, from(#FFF), to(#EDEDED));
+}
+.journal.browser .filter button:active {
+   background: #999;
+   background: -webkit-gradient(linear, left top, left bottom, from(#EDEDED), to(#FFF));
+}
+.journal.browser .filter button:hover {
+   background: #EDEDED;
+   background: -webkit-gradient(linear, left top, left bottom, from(#FFF), to(#DCDCDC));
+}
+
+/******************************************************************************************************************/
+.journal.browser {
+   width: 800px;
+   margin-left: auto;
+   margin-right: auto;
+}
+.journal.browser button.newEntry {
+   margin: 5px 100px;
+   padding: 1px 25px;
+   border-radius: 0.3em;
+   font-size: 1em;
+   font-family: 'Ubuntu', sans-serif;
+}
+
+.journal.browser .filter {
+   background: rgba(0,0,0,0.3);
+   color: #DDD;
+   border-radius: 2px;
+}
+.journal.browser .filter .label {
+   text-align: center;
+   cursor: pointer;
+   border-radius: 2px;
+   font-size: 0.75em;
+}
+.journal.browser .filter .label:hover {
+   color: white;
+   background: rgba(255,255,255,0.3);
+}
+.journal.browser .filter .options {
+   display: none;
+   margin: 3px;
+}
+.journal.browser .filter button {
+   margin: 4px;
+   padding: 3px 8px;
+   border-radius: 0.4em;
+   font-size: 0.8em;
+   font-family: 'Ubuntu', sans-serif;
+}
+
+.journal.browser .entry {
+   color: #999;
+}
+.journal.browser .entry:hover {
+}
+.journal.browser .entry .date {
+   padding: 0 25px 0 10px;
+}
+.journal.browser .entry span {
+   display: block;
+}
+.journal.browser .entry span.date,
+.journal.browser .entry span.title {
+   float: left;
+}
+.journal.browser .entry button {
+   float: right;
+   padding: 0 15px;
+   margin: 0 5px;
+   font-size: 0.8em;
+   font-famiily: 'Ubuntu', sans-serif;
+   border-radius: 0.2em;
+}
+
+.journal.browser .entry .clear {
+   clear: both;
+}
+/******************************************************************************************************************/
+.journal.editor {
+   width: 800px;
+   margin-left: auto;
+   margin-right: auto;
+}
+.journal.editor input,
+.journal.editor textarea {
+   width: 90%;
+   border-radius: 10px;
+   font-family: 'Ubuntu', sans-serif;
+   font-size: 1.4em;
+   padding: 5px;
+   margin: 4px 5%;
+   opacity: 0.8;
+}
+.journal.editor textarea {
+   font-size: 1.2em;
+   height: 300px;
+}
+.journal.editor input[name=title] {
+   margin-top: 10px;
+}
+
+.journal.editor textarea:hover,
+.journal.editor textarea:focus,
+.journal.editor input:hover,
+.journal.editor input:focus {
+   opacity: 1.0;
+}
+
+.journal.editor .buttons {
+   right: 0;
+   text-align: right;
+}
+.journal.editor .buttons button {
+   padding: 5px 10px;
+   margin: 5px;
+   font-size: 1.1em;
+   font-family: 'Ubuntu', sans-serif;
+   border-radius: 0.5em;
+   text-transform: uppercase;
+}
+
+/******************************************************************************************************************/
+.journal.tagList .tag {
+   color: #DDD;
+   margin: 2px 0;
+}
+.journal.tagList .tag:hover {
+   color: white;
+}
+.journal.tagList .tag .label,
+.journal.tagList .tag .count {
+   float: left;
+}
+.journal.tagList .tag .label {
+   min-width: 150px;
+}
+.journal.tagList .tag .count {
+   color: #999;
+}
+.journal.tagList .tag button {
+   float: right;
+   padding: 0 15px;
+   margin: 0 8px;
+   font-size: 0.8em;
+   font-family: 'Ubuntu', sans-serif;
+   border-radius: 0.2em;
+}
+.journal.tagList .tag .clear {
+   clear: both;
+}
+

@@ -1,0 +1,39 @@
+* {
+   margin: 0;
+   padding: 0;
+   border: 0;
+}
+
+body {
+   background: url("img/bg.jpg") no-repeat center center fixed;
+   padding: 0;
+   margin: 0;
+   font-family: 'Ubuntu', sans-serif;
+   font-size: 12pt;
+}
+
+.window {
+   position: relative;
+   margin: 5px;
+   padding : 6px;
+   background: rgba(0, 0, 0, 0.6);
+   border-radius: 8px;
+}
+   .window h3.title {
+      text-align: center;
+      color: white;
+      text-transform: lowercase;
+      margin: 1px;
+      font-weight: normal;
+      font-size: .8em;
+   }
+   .window .controls {
+      position: absolute;
+      top: 0;
+      right: 0;
+      color: white;
+   }
+.loader {
+   margin: 5px;
+   text-align: center;
+}

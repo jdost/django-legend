@@ -1,0 +1,36 @@
+.multiSelect {
+   position: relative;
+}
+.multiSelect .clear {
+   clear: both;
+}
+
+.multiSelect .mainInput {
+   width: 150px !important;
+   font-size: 0.9em;
+   float: right;
+   padding: 5px;
+}
+.multiSelect .valueDisplay {
+   float: right;
+   min-width: 400px;
+   color: white;
+   text-transform: lowercase;
+   font-size: 1.1em;
+   padding: 8px 2px;
+   text-align: right;
+}
+.multiSelect .inputOptions {
+   display: none;
+   position: absolute;
+   color: #CCC;
+   width: 150px;
+   background: rgba(0,0,0,0.5);
+   padding: 0 5px 5px;
+   border-radius: 0 0 5px 5px;
+}
+
+.multiSelect .inputOptions .inputOption:hover {
+   cursor: pointer;
+   color: white;
+}
