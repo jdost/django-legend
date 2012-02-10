@@ -1,7 +1,6 @@
 from django.http import HttpResponse
 from django.shortcuts import render_to_response
 from legend.journal.models import *
-from legend.journal import forms
 from legend.utils import *
 from re import sub
 import calendar, datetime, string, json
@@ -28,7 +27,7 @@ def single(request, slug):
    h = gen_header()
 
    return render_to_response('journal.html', {'journal': True, 'pagename': title,
-      'taglist': ts, 'entrylist': es, 'single': True, 'form': forms.CommentForm(),
+      'taglist': ts, 'entrylist': es, 'single': True,
       'page': -1, 'header': h})
 
 def tag(request, slug, page=0):

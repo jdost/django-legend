@@ -1,10 +1,8 @@
 from django.conf.urls.defaults import *
-from legend import journal, style, gallery, views, ws
+from legend import journal, gallery, views, ws
 
 urlpatterns = patterns('',
    (r'^journal/', include('journal.urls')),
-   (r'^style/', include('style.urls')),
-   (r'^search/', include('search.urls')),
    (r'^gallery/', include('gallery.urls')),
    (r'^ws/', include('ws.urls')),
    (r'^$', 'journal.views.default'),

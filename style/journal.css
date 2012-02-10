@@ -1,0 +1,136 @@
+#sidebar { }
+    #sidebar ul#tag-list {
+        margin: 2px 4px 0 0;
+        padding: 0;
+        right: 0;
+        list-style: none;
+        text-align: right;
+    }
+        ul#tag-list li {
+            opacity: 0.6;
+            padding: 1px 0 5px;
+            text-transform: lowercase;
+        }   ul#tag-list li:hover {
+                opacity: 1.0;
+                cursor: pointer;
+            }
+            ul#tag-list li a {
+                text-decoration: none;
+                color: inherit;
+            }
+    #sidebar table#cal-table {
+        border: 0;
+        margin: 0;
+        padding: 0;
+    }
+        table#cal-table table.controls {
+            margin: 0;
+            padding: 0;
+            border: 0;
+            font-size: 8pt;
+            text-align: center;
+        }
+            table#cal-table table.controls td {
+                background: #FFF;
+            }   table#cal-table table.controls td:hover {
+                    background-color: transparent;
+                    cursor: pointer;
+                }
+            table#cal-table table.controls td.current-month {
+                background: transparent;
+            }
+        table#cal-table table.cal-grid {
+            position: relative;
+            top: 0;
+            bottom: 0;
+            width: 100%;
+            height: 100%;
+            font-size: 9pt;
+            line-height: 14px;
+            text-align: center;
+        }
+            table#cal-table table.cal-grid td {
+                cursor: default;
+            }
+            table#cal-table table.cal-grid td.cal-entry a {
+                display: block;
+                cursor: pointer;
+                border-radius: 3px;
+                background: #FFF;
+                opacity: 0.6;
+                text-decoration: none;
+                color: inherit;
+                padding: 3px 0;
+                font-weight: bold;
+            }   table#cal-table table.cal-grid td.cal-entry:hover a {
+                    opacity: 1.0;
+                }
+            table#cal-table table.cal-grid td.off-month {
+                color: #838383;
+            }
+
+#body {
+    border-top: 11px solid #C80000;
+    border-bottom: 11px solid #C80000;
+}
+    div.entry div.info {
+        height: 48px;
+        width: 100%;
+        cursor: default;
+    }
+        div.entry div.info div.date {
+            float: right;
+            margin: 3px 0;
+            padding: 0 6px 0 6px;
+            height: 42px;
+            background: #7E7E7E;
+            color: #1E1E1E;
+            text-align: center;
+            font-weight: normal;
+            position: relative;
+        }
+            div.entry div.info div.date span.month {
+                position: relative;
+                top: 0;
+                padding: 0 4px;
+                font-size: 14px;
+            }
+            div.entry div.info div.date span.day {
+                font-size: 30px;
+                position: absolute;
+                display: block;
+                top: 13px;
+                margin: 0;
+                padding: 0;
+                left: 3px;
+                letter-spacing: 2px;
+                line-height: 30px;
+            }
+                div.entry div.info div.date span.day em {
+                    font-style: normal;
+                    color: #ABABAB;
+                }
+        div.entry div.info h3 {
+            float: right;
+            text-align: right;
+            background: #4E4E4E;
+            margin: 3px 0;
+            padding: 4px 8px 1px 6px;
+            color: white;
+            height: 37px;
+            font-size: 27pt;
+            line-height: 36px;
+            font-weight: normal;
+            letter-spacing: 2px;
+        }
+            div.entry div.info h3 a {
+                text-decoration: none;
+                color: inherit;
+            }
+    div.entry p {
+        margin: 10px 20px 26px 8px;
+        text-align: justify;
+        font-size: 18px;
+        line-height: 21px;
+        text-indent: 30px;
+    }

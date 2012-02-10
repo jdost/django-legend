@@ -13,8 +13,8 @@
    <script language="javascript" src="/scripts/album.js" type="text/javascript"></script>
    <script language="javascript" src="/scripts/clean.js" type="text/javascript"></script>
 <!-- Style sheets for the page, one generic, one page specific -->
-   <link rel="stylesheet" type="text/css" href="{% url style.views.main %}">
-   <link rel="stylesheet" type="text/css" href="{% url style.views.gallery %}">
+   <link rel="stylesheet" type="text/css" href="/style/main.css">
+   <link rel="stylesheet" type="text/css" href="/style/gallery.css">
 <!-- Other links, including the favicon and the rss feed url -->
    <link rel="shortcut icon" href="/style/img/favicon.ico">
    <link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="rss.php">
@@ -27,7 +27,7 @@
    {% include "head.html" %}
 <!-- The body section, contains the page specific information -->
    <div id="body">
-      <div id="sidebar">      
+      <div id="sidebar">
          <div id="albumCtrl">
             <div id="albumPageCnt">
                <h5>page count</h5>
@@ -53,7 +53,7 @@
          <div id="imageField">&nbsp;</div>
       </div>
          <div id="footer">
-         
+
       </div>
    </div>
 </body>
