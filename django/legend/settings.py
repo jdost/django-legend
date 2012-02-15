@@ -5,7 +5,7 @@ DJANGO_ROOT = os.path.dirname(os.path.realpath(django.__file__))
 SITE_ROOT = os.path.dirname(os.path.realpath(__file__))
 WWW_ROOT = '/home/www/jostendorf/django'
 
-DEBUG = True
+DEBUG = False#True
 TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (
@@ -84,6 +84,7 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.sites',
     'django.contrib.markup',
+    'south',
     'legend.journal',
     'legend.gallery',
     'legend.ws',

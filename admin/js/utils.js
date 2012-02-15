@@ -183,12 +183,23 @@ window.utils = (function () { // {{{
 
       return self;
    }) // }}}
+     , centerNode = function (node) {
+      var base = node.parent();
+      var left = (base.innerWidth() - node.outerWidth())/2,
+          above = (base.innerHeight() - node.outerHeight())/2;
+
+      node.css({
+         top  : above
+      ,  left : left
+      });
+   }
      ;
 
    $(document).ready(setup);
    return {
       make         : make
    ,  init         : setValues
+   ,  center       : centerNode
 
    ,  loadStyle    : loadStyle
    ,  unloadStyle  : unloadStyle

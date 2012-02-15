@@ -10,8 +10,63 @@ window.admin = (function () { // {{{
       }; // }}}
 
       utils.loadStyle({ name: "navigation", path: "navigation" });
+      utils.loadStyle({ name: "authentication", path: "authenticate" });
       utils.loaded({name: "admin"});
+
+      authenticate();
    } // }}}
+     , AUTH_LOC = '/ws/verify/'
+     , authenticate = function () {
+      var checkOrBuild = function (response) {
+         if (response.XHR.status === 202)
+            return;
+         var failed = false;
+         var auth = $(utils.make('input'))
+            .addClass('auth')
+            .attr({
+               'type'        : 'input'
+            ,  'placeholder' : 'computer name'
+            ,  'name'        : 'name'
+            }).keypress(function (event) {
+               var checkAuth = function (response) {
+                  console.log(response);
+                  if (response.XHR.status !== 202) {
+                     auth.val("").addClass("failed");
+                     failed = true;
+                  } else {
+                     node.remove();
+                  }
+               };
+               if (failed) {
+                  auth.removeClass("failed");
+                  failed = false;
+               }
+
+               if (event.keyCode === 13) {
+                  moduleHandler.request({
+                     target   : AUTH_LOC
+                  ,  data     : { "name": auth.val() }
+                  ,  callback : checkAuth
+                  ,  type     : 'POST'
+                  });
+               }
+            });
+         var node = $(utils.make('div'))
+            .addClass('authHolder')
+            .append($(utils.make('div'))
+               .addClass('authWindow')
+               .append(auth)
+            );
+
+         $("body").append(node);
+         utils.center(auth.parent());
+      };
+
+      moduleHandler.request({
+         target   : AUTH_LOC
+      ,  callback : checkOrBuild
+      });
+   }
      , nav = (function () { // {{{
       var links = {}
         , active
@@ -150,14 +205,16 @@ window.admin = (function () { // {{{
       ,  success  : function (data, status, XHR) {
             if (typeof settings.callback !== 'function') { return; }
             settings.callback({
-               "data"   : data,
-               "status" : status,
+               "data"   : data
+            ,  "status" : status
+            ,  "XHR"    : XHR
             });
          }
       ,  error    : function (XHR, status, error) {
             settings.callback({
-               "error"  : error,
-               "status" : status,
+               "error"  : error
+            ,  "status" : status
+            ,  "XHR"    : XHR
             });
          }
       });
@@ -175,6 +232,7 @@ window.admin = (function () { // {{{
      ;
 
    $(document).ready(setup);
+
    return {
       navigation : nav
    };

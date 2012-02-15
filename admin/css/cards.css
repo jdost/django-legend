@@ -9,7 +9,7 @@ body {
    min-height: 100%;
 }
 .card .window {
-   width: 80%;
+   max-width: 80%;
    margin: 30px auto 10px;
 }
 .backControl, .forwardControl {
