@@ -1,5 +1,6 @@
 *.pyc
 .DS_Store
 *.save
+db.py
 
 __pycache__/*

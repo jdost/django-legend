@@ -1,11 +1,12 @@
 import django
 import os
+import db
 # Django settings for legend project.
 DJANGO_ROOT = os.path.dirname(os.path.realpath(django.__file__))
 SITE_ROOT = os.path.dirname(os.path.realpath(__file__))
 WWW_ROOT = '/home/www/jostendorf/django'
 
-DEBUG = False#True
+DEBUG = False
 TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (
@@ -14,12 +15,12 @@ ADMINS = (
 
 MANAGERS = ADMINS
 
-DATABASE_ENGINE = 'mysql'           # 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
-DATABASE_NAME = 'legend'             # Or path to database file if using sqlite3.
-DATABASE_USER = 'django'             # Not used with sqlite3.
-DATABASE_PASSWORD = 'python'         # Not used with sqlite3.
-DATABASE_HOST = ''             # Set to empty string for localhost. Not used with sqlite3.
-DATABASE_PORT = ''             # Set to empty string for default. Not used with sqlite3.
+DATABASE_ENGINE = db.engine           # 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
+DATABASE_NAME = db.table              # Or path to database file if using sqlite3.
+DATABASE_USER = db.username           # Not used with sqlite3.
+DATABASE_PASSWORD = db.password       # Not used with sqlite3.
+DATABASE_HOST = db.host               # Set to empty string for localhost. Not used with sqlite3.
+DATABASE_PORT = db.port               # Set to empty string for default. Not used with sqlite3.
 
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
@@ -40,7 +41,8 @@ USE_I18N = True
 
 # Absolute path to the directory that holds media.
 # Example: "/home/media/media.lawrence.com/"
-GALLERY_ROOT = os.path.join(WWW_ROOT, 'img')
+STATIC_ROOT = os.path.join(WWW_ROOT, 's')
+GALLERY_ROOT = os.path.join(STATIC_ROOT, 'img')
 MEDIA_ROOT = GALLERY_ROOT + "/temp"
 
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
