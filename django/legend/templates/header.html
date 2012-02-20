@@ -1,0 +1,14 @@
+      <div id="header">
+         <h1>Jeff</h1>
+         <ul>
+            <li class="journal{% if page.id == 1 %} active{% endif %}">
+               <a href="{% url journal:base %}">the writer</a>
+            </li>
+            <li class="gallery{% if page.id == 2 %} active{% endif %}">
+               <a href="/gallery/">the photographer</a>
+            </li>
+         </ul>
+         <script language="javascript" type="text/javascript">
+            window.page.current = {{ page.id }};
+         </script>
+      </div>

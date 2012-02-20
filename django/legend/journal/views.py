@@ -7,6 +7,21 @@ import calendar, datetime, string, json
 
 # Create your views here.
 
+class Entry(View):
+   def __call__(self, request, page=0, tag=None, slug=None):
+      settings = JOURNAL
+      if slug:
+         entry_set = [Journal.objects.get(url=slug)]
+         settings["title"] = entry_set[0].title
+      elif tag:
+         set_tag = Tag.objets.get(url=tag)
+         entry_set = set_tag.journal_set.order_by('-date')
+         settings["title"] += "@" + set_tag.name
+      else:
+         entry_set = Journal.objects.order_by('-date')
+
+      return response(request, JOURNAL, { "entry_list": entry_set })
+
 def default(request, page=0):
    page = int(page)
 

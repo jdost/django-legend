@@ -1,0 +1,30 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+{% load tools %}
+<html>
+   <head>
+      <title>Jeff | {{ page.title }}</title>
+
+      <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+
+      <script language="javascript" type="text/javascript">
+         window.page = {
+            static_root : "{{ page.values.STATIC }}"
+         };
+      </script>
+      {% for s in page.styles %}
+      {% style s %}{% endfor %}
+
+      <link rel="shortcut icon" href="{{ page.values.STATIC }}/css/img/favicon.ico">
+      <link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="{% url rss %}">
+
+   </head>
+   <body>
+{% include "header.html" %}
+{% include page.template %}
+{% include "footer.html" %}
+      <div id="scripts">{% for s in page.scripts %}
+         {% script s %}{% endfor %}
+      </div>
+   </body>
+</html>
+

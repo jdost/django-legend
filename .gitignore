@@ -1,6 +1,10 @@
 *.pyc
 .DS_Store
 *.save
+*.db
 db.py
 
 __pycache__/*
+venv/*
+s/css/*.css
+s/js/lib
