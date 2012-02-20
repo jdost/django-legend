@@ -2,9 +2,9 @@
 .DS_Store
 *.save
 *.db
+*.css
 db.py
 
 __pycache__/*
 venv/*
-s/css/*.css
-s/js/lib
+s/js/lib/*

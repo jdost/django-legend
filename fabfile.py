@@ -6,7 +6,7 @@ import os
 site_loc = os.getcwd()
 django_loc = p.join(site_loc, 'django')
 static_loc = p.join(site_loc, 's')
-venv_loc = p.join("", "home", "www", "legend", "venv")
+venv_loc = p.join("/home", "jeff", "src","backend", "venv")
 
 def deploy():
    local("cd " + site_loc)
@@ -29,11 +29,10 @@ def setup_db():
 def setup_virtual():
    local('mkdir ' + venv_loc)
    local('virtualenv2 --no-site-packages ' + venv_loc)
-   local('cd ' + venv_folder)
+   local('cd ' + venv_loc)
    local('ln -s ' + django_loc + ' ' + p.join(venv_loc, 'django'))
-   local('cp ' + p.join(site_loc, "scripts","vsetup.sh") + " .")
-   with cd(venv_loc):
-      local('./vsetup.sh')
+   local('source ' + p.join(venv_loc,'bin','activate'))
+   local('pip install -r ' + p.join(site_loc, 'scripts', 'req'))
 
 def auth():
    auth_loc = p.join(django_loc, "legend", "ws", "AUTH")
