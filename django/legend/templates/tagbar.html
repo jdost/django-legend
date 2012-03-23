@@ -1,9 +1,0 @@
-
-<!-- TAG SIDEBAR ##################################################################-->
-   <h5>tags</h5>
-        <ul id="tag-list">
-      {% for t in taglist %} 
-         <li><a href="{% url journal.views.tag t.url %}">{{ t.name }}</a></li>
-      {% endfor %}
-      </ul>
-<!-- END TAG BAR ##################################################################-->
