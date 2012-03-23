@@ -1,0 +1,46 @@
+{% load markup %}
+      <script type="text/javascript">
+         window.server.pages = {
+            count   : {{ data.page_count }}
+         ,  focused : {{ data.current_page }}
+         ,  tree    : "{{ data.current_set }}"
+         ,  urls    : [{% for u in data.url_set %}"{{ u }}",{% endfor %}]
+         };
+      </script>
+      <div id="journal">
+         <div class="page">
+            {% for entry in data.entry_list %}
+            <div class="entry">
+               {% spaceless %}
+               <h3>
+                  <a {#href={{ entry.get_absolute_url }}}#>{{ entry.title }}</a>
+               </h3>
+               {% endspaceless %}
+               <ul class="tags">
+                  tagged with
+                  {% for tag in entry.tags.all %}
+                     <a href="{{ tag.get_absolute_url }}"><li>{{ tag.name }}</li></a>{% if not forloop.last %},{% endif %}
+                  {% empty %} <li>none</li> {% endfor %}
+               </ul>
+               <div class="date" value="{{ entry.date|date:"c" }}"> {{ entry.date|date:"l, M d" }} </div>
+               <div class="content">
+                  {{ entry.content|markdown }}
+               </div>
+            </div>
+            {% endfor %}
+
+            {% spaceless %}
+            {% if data.nav %}
+            <div class="pageControls">
+               {% if data.current_page > 0 %}
+                  <a href="{{ data.nav.next }}">Newer</a>
+               {% endif %}
+
+               {% if data.current_page < data.page_count %}
+                  <a href="{{ data.nav.prev }}">Older</a>
+               {% endif %}
+            </div>
+            {% endif %}
+            {% endspaceless %}
+         </div>
+      </div>

@@ -2,7 +2,7 @@
 {% load tools %}
 <html>
    <head>
-      <title>Jeff | {{ page.title }}</title>
+      <title>Jeff | {{ data.title }}</title>
 
       <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 
@@ -11,6 +11,7 @@
             static_root : "{{ page.values.STATIC }}"
          ,  debug : "{{ page.values.DEBUG }}" == "True"
          };
+         window.ui = {};
       </script>
       {% for s in page.styles %}
       {% style s %}{% endfor %}
@@ -29,8 +30,11 @@
    </body>
    <script type="text/javascript">
       $(document).ready(function () {
-         if (server.debug)
-            less.watch();
+            if (server.debug) {
+               setTimeout(function () {
+                  less.watch();
+               }, 1000);
+            }
       });
    </script>
 </html>

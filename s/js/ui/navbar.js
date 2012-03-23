@@ -3,6 +3,29 @@ $(document).ready(function () {
      , navbuttons = $("#header li")
      , hr = $("#header hr")
      , norm
+     , setNorm = function (node) {
+      norm = {
+         size: getLength(node)
+      ,  color: node.css("border-bottom-color")
+      }
+
+      applyBorder(norm.size, norm.color);
+      $("#footer").css("border-top-color", norm.color);
+   }
+     , current
+     , findCurrent = function () {
+      if (utils.isUndef(current)) {
+         current = $("#header li.active");
+         if (current.length) {
+            return current;
+         } else {
+            current = $("#header h1");
+         }
+      }
+
+      return current;
+   }
+
      , applyBorder = function (size, color) {
       hr.css({
          width: size
@@ -20,17 +43,7 @@ $(document).ready(function () {
       applyBorder(norm.size, norm.color);
    });
 
-   var current = $("#header li.active");
-   if (current.length) {
-      norm = {
-         size: getLength(current)
-      ,  color: current.css('border-bottom-color')
-      };
-      applyBorder(norm.size, norm.color);
-      $("#footer").css("border-top-color", norm.color);
-   } else {
-      norm = { size: 0, color: 'transparent' };
-   }
+   setNorm(findCurrent());
 
    var header = $("#header")
      , schmidtVal = 32
@@ -42,10 +55,14 @@ $(document).ready(function () {
          header.removeClass("snap");
          holder.removeClass("snap");
          stat = false;
+
+         setNorm(findCurrent());
       } else if (!stat && pos >= schmidtVal) {
          header.addClass("snap");
          holder.addClass("snap");
          stat = true;
+
+         setNorm(findCurrent());
       }
    };
 

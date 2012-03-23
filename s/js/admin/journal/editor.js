@@ -9,7 +9,7 @@
      , container
      , handler
      , node
-     , card
+     , card = null
      , setup = function () {
       utils.loaded({ name: "journal.editor" });
    }
@@ -60,13 +60,18 @@
          });
       }
       card.close();
+      card = null;
    }
      , cancelEntry = function () {
       card.close();
+      card = null;
    }
      , inputs = {}
      , buttons = {}
      , drawWindow = function () {
+      if (!utils.isNull(card)) {
+         card.close();
+      }
       var draw_field = def({
          "name"   : ""
       ,  "label"  : ""
@@ -149,8 +154,8 @@
          .append(buttons.cancel)
       );
 
-      card = ui.cards.build({
-         contents : node
+      card = container.make({
+         content  : node
       ,  tree     : "entries"
       ,  name     : "editor"
       });

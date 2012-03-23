@@ -3,11 +3,8 @@ from legend import journal
 
 urlpatterns = patterns('journal.views',
    url(r'^$', 'Entry', name='base'),
-   (r'^(?P<page>\d*)/$', 'Entry'),
-   (r'^(?P<slug>\w*)/$', 'Entry'),
-   (r'^@(?P<slug>\w*)/$', 'Entry'),
-   (r'^@(?P<slug>\w*)/(?P<page>\d*)/$', 'Entry'),
-
-   (r'^cal/(?P<mth>\d*)/(?P<yr>\d*)/$', 'cal'),
-   (r'^comment/(?P<entry>\d*)/$', 'comment'),
+   url(r'^(?P<page>\d*)/$', 'Entry', name='base_paged'),
+   url(r'^(?P<slug>\w*)/$', 'Entry', name='single'),
+   url(r'^@(?P<tag>\w*)/$', 'Entry', name='tag'),
+   url(r'^@(?P<tag>\w*)/(?P<page>\d*)/$', 'Entry', name='tag_paged'),
 )

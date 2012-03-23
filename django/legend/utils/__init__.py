@@ -1,5 +1,8 @@
 from django.http import HttpResponse
 from django.shortcuts import render_to_response
+from django.core.serializers import serialize
+from django.db.models.query import QuerySet
+from django.db import models
 import legend.settings as s
 import json
 
@@ -13,10 +16,22 @@ class View(object):
    def __call__(self, request, **kwargs):
       pass
 
+def isJSON(request):
+   return "JSON" in request.GET
+
+class ModelEncoder(json.JSONEncoder):
+   def default(self, obj):
+      if isinstance(obj, QuerySet):
+         return [ModelEncoder.default(self,o) for o in obj]
+      elif isinstance(obj, models.Model):
+         return obj.__json__()
+      return json.JSONEncoder.default(self, obj)
+
 DEFAULT = {
    "scripts": [
       ["lib","jQuery"],
-      ["ui", "navbar.js"]
+      ["ui", "navbar.js"],
+      ["utils.js"]
    ],
    "styles": [
       ["base"],
@@ -32,6 +47,7 @@ JOURNAL = {
    "template": "journal.html",
    "scripts": DEFAULT["scripts"] + [
       ["ui", "cards.js"],
+      ["utils", "tracker.js"],
       ["journal.js"]
    ],
    "styles": DEFAULT["styles"] + [
@@ -40,7 +56,19 @@ JOURNAL = {
    "id": 1,
    "values": DEFAULT["values"]
 }
-GALLERY = 2
+GALLERY = {
+   "title": "Gallery",
+   "template": "gallery.html",
+   "scripts": DEFAULT["scripts"] + [
+      ["gallery.js"],
+      ["ui", "viewer.js"]
+      ],
+   "styles": DEFAULT["styles"] + [
+      ["gallery"]
+      ],
+   "id": 2,
+   "values": DEFAULT["values"]
+}
 ABOUT = {
    "title": "About",
    "template": "about.html",
@@ -52,10 +80,11 @@ ABOUT = {
    "id": 3,
    "values": DEFAULT["values"]
 }
+LESS_JS = ["lib", "less"]
 def response(request, page, data):
-   if "JSON" in request.GET:
-      return HttpResponse(json.dumps(data), mimetype="application/json")
+   if isJSON(request):
+      return HttpResponse(json.dumps(data, cls=ModelEncoder), mimetype="application/json")
    else:
-      if s.DEBUG:
-         page["scripts"].append(["lib", "less"])
+      if s.DEBUG and LESS_JS not in page["scripts"]:
+         page["scripts"].append(LESS_JS)
       return render_to_response('base.html', {"page": page, "data": data})

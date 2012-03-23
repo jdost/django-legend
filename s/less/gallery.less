@@ -1,0 +1,122 @@
+@import "lib";
+
+.font-awesome;
+
+#gallery {
+   background: #FFF;
+   color: @charcoal;
+   z-index: 1;
+
+   img {
+      max-height: 100%;
+      max-width: 100%;
+   }
+
+   .albumList {
+      padding: 15px 25px;
+
+      a { color: inherit; }
+      .albumCover {
+         @width:300px;
+         float: left;
+         width: @width;
+         padding: 5px;
+
+         &:hover {
+            background: #DDD;
+         }
+         &:active {
+            color: #FFF;
+            background: @charcoal;
+         }
+
+         .cover {
+            float: left;
+            width: @width*0.25;
+         }
+
+         h3 {
+            float: left;
+            font-size: 1.1em;
+            width: @width*0.75-3;
+            padding: 1px 0 2px 3px;
+         }
+
+         div.description {
+            float: left;
+            font-size: 0.75em;
+            width: 220px;
+            box-model: border-box;
+            padding: 3px 1px 1px 4px;
+         }
+         .clear;
+      }
+      .clear;
+   }
+
+   .album {
+      padding: 10px 40px;
+      text-align: center;
+
+      a { color: inherit; }
+      a.page {
+         //float: left;
+         display: inline-block;
+         height: 400px;
+      }
+      .image {
+         //float: left;
+         display: inline-block;
+         height: 175px;
+         overflow: hidden;
+         padding: 10px;
+      }
+      img.thumbnail {
+         height: 100%;
+      }
+      .clear;
+   }
+}
+
+.imageViewer {
+   .viewerBacker {
+      position: fixed;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      background: rgba(0,0,0,0.4);
+      z-index: 14;
+   }
+
+   .viewer {
+      position: fixed;
+      top: 0;
+      z-index: 25;
+      background: white;
+      border-radius: 0.2em;
+   }
+   .Image {
+      position: absolute;
+      margin: 5px;
+      //max-width: 85%;
+
+      img {
+         max-height: 98%;
+         max-width: 100%;
+         margin: 0 auto;
+      }
+
+      .caption {
+         position: absolute;
+         background: rgba(0,0,0,0.6);
+         color: #FFF;
+         right: 5px;
+         padding: 5px 8px;
+         bottom: 5px;
+         max-width: 50%;
+         text-align: right;
+         border-top-left-radius: 0.4em;
+      }
+   }
+}

@@ -1,46 +1,53 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
-"http://www.w3.org/TR/html4/loose.dtd">
-{% load style %}
-<html>
-<head>
-<title>Jeff | {{ pagename }}</title>
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
-
-<!--  Scripts for the page, specific to Journal -->
-   <script language="javascript" src="/scripts/lib/jquery.js" type="text/javascript"></script>
-
-   <script language="javascript" src="/scripts/clean.js" type="text/javascript"></script>
-<!-- Style sheets for the page, one generic, one page specific -->
-   <link rel="stylesheet" type="text/css" href="/style/main.css">
-   <link rel="stylesheet" type="text/css" href="/style/gallery.css">
-<!-- Other links, including the favicon and the rss feed url -->
-   <link rel="shortcut icon" href="/style/img/favicon.ico">
-   <link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="rss.php">
-
-</head>
-
-<!-- The onLoad for the body is the AJAX initialization for the specific page -->
-<body>
-<!-- The header tags, for the upper section of the page that stays pretty static between pages -->
-   {% include "head.html" %}
-<!-- The body section, contains the page specific information -->
-   <div id="body">
-      <div id="sidebar">
-
-      </div>
-
-      <div id="content">
-         {% for a in albumlist %}
-            <a class="album" href="{{ a.get_absolute_url }}">
-            <h4 class="albumTitle">{{ a.name }}</h4>
-            <span class="albumCnt">{{ a.image_set.count }}</span>
-            <div class="albumDesc">{{ a.description }}</div>
-            <!--img src="/img/{{ a.url }}.jpg" /-->
+{% load markup %}
+      <script type="text/javascript">
+         window.server.pages = {
+         };
+      </script>
+      <div id="gallery">
+         {% if data.album_list %}
+         <div class="albumList">
+            {% for album in data.album_list %}
+            <a href="{{ album.get_absolute_url }}">
+               <div class="albumCover">
+                  <div class="cover"><img src="{{ album.get_cover_url }}" /></div>
+                  <h3>{{ album.name }}</h3>
+                  <div class="description">{{ album.description|markdown }}</div>
             </a>
-         {% endfor %}
-         <div id="footer">
+            {% endfor %}
+            <script type="text/javascript">
+               window.server.pages.current = 1;
+            </script>
+         </div>
+         {% else %}
+         <div class="album">
+            <div class="nav">
+            {% for page in data.nav.pages %}
+               {% if data.nav.current == forloop.counter0 %}
+                  <span class="current">{{ forloop.counter }}</span>
+               {% else %}
+                  <a href="{{ page }}">{{ forloop.counter }}</a>
+               {% endif %}
+            {% endfor %}
+            </div>
+            {% for image in data.image_list %}
+            <a class="image" id="thumb_{{ image.url }}" href="{{ image.get_absolute_url }}">
+               <img class="thumbnail" src="{{ image.get_thumbnail_url }}" />
+            </a>
+            {% endfor %}
+         </div>
+         <script type="text/javascript">
+            window.server.pages.current = 2;
+            window.server.pages.album = {
+               url     : "{{ data.album.get_absolute_url }}"
+            ,  name    : "{{ data.album.name }}"
+            ,  pages   : [{% for p in data.nav.pages %}"{{ p }}",{% endfor %}]
+            ,  current : {{ data.nav.current }}
+            };
+            window.server.pages.images = [
+            {% for i in data.image_list %}
+               { url: "{{ i.get_absolute_url }}", caption:"{{ i.caption|markdown }}", views: {{ i.views }}}{% if not forloop.last %},{% endif %}
+            {% endfor %}
+            ];
+         </script>
+         {% endif %}
       </div>
-
-</div>
-</body>
-</html>

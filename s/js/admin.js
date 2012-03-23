@@ -1,6 +1,7 @@
 window.admin = (function () { // {{{
    var self = this
      , nodes
+     , cards
      , setup = function () { // {{{
       nodes = { // {{{
          "nav"  : $("#nav")
@@ -10,8 +11,13 @@ window.admin = (function () { // {{{
       }; // }}}
 
       utils.loadStyle({ name: "navigation", path: "navigation" });
+      utils.loadStyle({ name: "cards", path: "cards" });
       utils.loadStyle({ name: "authentication", path: "authenticate" });
       utils.loaded({name: "admin"});
+      cards = ui.cards({
+         name      : "admin"
+      ,  container : nodes.body
+      });
 
       authenticate();
    } // }}}
@@ -150,11 +156,10 @@ window.admin = (function () { // {{{
          subHolder.css({ left: -1*subHolder.outerWidth() }).animate({ left: 0 });
       })
         , openLink = def({
-         "link"   : null
-      ,  "module" : null
+         "module" : null
       ,  "data"   : {}
       }, function (settings) { // {{{
-         if (settings.link === null || settings.module === null) {
+         if (utils.isUndef(settings.link) || settings.module === null) {
             return;
          }
 
@@ -186,7 +191,7 @@ window.admin = (function () { // {{{
       }
 
       settings.module.load({
-         "container" : nodes["body"]
+         "container" : cards
       ,  "handler"   : moduleHandler
       ,  "option"    : settings.option
       });

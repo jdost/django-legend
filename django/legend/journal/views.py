@@ -1,100 +1,83 @@
 from django.http import HttpResponse
 from django.shortcuts import render_to_response
+from django.core.urlresolvers import reverse
 from legend.journal.models import *
 from legend.utils import *
 from re import sub
+from math import ceil
 import calendar, datetime, string, json
 
 # Create your views here.
 
+PAGE_SIZE = 3
+
 class Entry(View):
-   def __call__(self, request, page=0, tag=None, slug=None):
-      settings = JOURNAL
+   def __call__(self, request, page='0', tag=None, slug=None):
+      self.urls = True#'URLS' in request.GET
+      self.json = 'JSON' in request.GET
+      page = int(page)
+      self.settings = JOURNAL
+
       if slug:
-         entry_set = [Journal.objects.get(url=slug)]
-         settings["title"] = entry_set[0].title
+         data = self.singleEntry(slug)
       elif tag:
-         set_tag = Tag.objets.get(url=tag)
-         entry_set = set_tag.journal_set.order_by('-date')
-         settings["title"] += "@" + set_tag.name
+         data = self.tagSet(tag, page)
       else:
-         entry_set = Journal.objects.order_by('-date')
+         data = self.baseSet(page)
 
-      return response(request, JOURNAL, { "entry_list": entry_set })
+      return response(request, JOURNAL, data)
 
-def default(request, page=0):
-   page = int(page)
+   def singleEntry(self, slug):
+      entry = Journal.objects.get(url=slug)
+      return {
+            "entry_list"   : [entry]
+         ,  "title"        : entry.title
+         ,  "page_count"   : 1
+         ,  "current_page" : 0
+         }
 
-   ts = Tag.objects.all()
-   es = Journal.objects.order_by('-date')[(page*5):(page*5+5)]
-   bool = not ((len(es) < 5) or (es[4].id == 0))
-   h = gen_header()
+   def tagSet(self, tag, page=0):
+      set_tag = Tag.objects.get(url=tag)
+      url_alias = "journal:tag_paged"
 
-   return render_to_response('journal.html', {'journal': True, 'pagename': 'Journal',
-      'taglist': ts, 'entrylist': es, 'single': False, 'page': page, 'end': bool,
-      'header': h})
+      data = {
+            "entry_list"    : set_tag.journal_set.order_by('-date')[PAGE_SIZE*page:PAGE_SIZE*(page+1)]
+         ,  "title"         : self.settings["title"] + "@" + set_tag.name
+         ,  "page_count"    : int(ceil(set_tag.journal_set.count() / float(PAGE_SIZE)))
+         ,  "current_page"  : page
+         ,  "current_set"   : "journal:tag:" + tag
+         ,  "nav"           : {
+               "next" : reverse(url_alias, kwargs={'tag':tag,'page':page-1}) if page > 0 else None
+            ,  "prev" : reverse(url_alias, kwargs={'tag':tag,'page':page+1})
+            }
+         }
 
-def single(request, slug):
-   ts = Tag.objects.all()
-   es = []
-   es.append(Journal.objects.get(url = slug))
-   title = 'journal: ' + es[0].title
-   h = gen_header()
+      if self.urls or not self.json:
+         url_set = []
+         for i in range(0,int(ceil(set_tag.journal_set.count() / float(PAGE_SIZE)))):
+            url_set.append(reverse(url_alias, kwargs={'tag':tag,'page':i}))
+         data["url_set"] = url_set
 
-   return render_to_response('journal.html', {'journal': True, 'pagename': title,
-      'taglist': ts, 'entrylist': es, 'single': True,
-      'page': -1, 'header': h})
+      return data
 
-def tag(request, slug, page=0):
-   page = int(page)
+   def baseSet(self, page=0):
+      url_alias = 'journal:base_paged'
+      data = {
+            "entry_list"   : Journal.objects.order_by('-date')[PAGE_SIZE*page:PAGE_SIZE*(page+1)]
+         ,  "title"        : self.settings['title']
+         ,  "page_count"   : int(ceil(Journal.objects.count() / float(PAGE_SIZE)))
+         ,  "current_page" : page
+         ,  "current_set"  : "journal:base"
+         ,  "nav"          : {
+               "next" : reverse(url_alias, kwargs={'page':page-1}) if page > 0 else None
+            ,  "prev" : reverse(url_alias, kwargs={'page':page+1})
+            }
+         }
 
-   ts = Tag.objects.all()
-   es = []
+      if self.urls or not self.json:
+         url_set = []
+         for i in range(0,int(ceil(Journal.objects.count() / float(PAGE_SIZE)))):
+            url_set.append(reverse(url_alias, kwargs={'page':i}))
+         data["url_set"] = url_set
 
-   target = Tag.objects.get(url = slug)
-   etemp = target.journal_set.order_by('-date')[(page*5):(page*5+5)]
-   for e in etemp:
-      if e.tags.filter(url = slug).count() > 0:
-         es.append(e)
-   h = gen_header()
-
-   return render_to_response('journal.html', {'journal': True, 'pagename': 'Journal: ' + target.name,
-      'taglist': ts, 'entrylist': es, 'single': False, 'header': h})
-
-month_names = [ "Jan", "Feb", "Mar", "Apr", "May", "June", "July", "Aug",
-      "Sept", "Oct", "Nov", "Dec"]
-def cal(request, yr, mth):
-   yr = int(yr)
-   mth = int(mth)
-
-   base = { "Month": month_names[mth] }
-
-   stats = calendar.monthrange(yr, mth+1)
-   if stats[0] == 6:
-      base["Dead"] = -1
-   elif mth == 0:
-      base["Dead"] = calendar.monthrange(yr-1, 12)[1] - stats[0]
-   else:
-      base["Dead"] = calendar.monthrange(yr, mth)[1] - stats[0]
-
-   arts = Journal.objects.filter(date__month=(mth+1), date__year=yr)
-   data = []
-   for a in arts:
-      data.append({"Date": a.date.day, "Title": a.title, "URL": a.url})
-
-   base["Dates"] = data;
-
-   return HttpResponse(json.dumps(base, indent=4), mimetype="json/application")
-
-def comment(request, entry):
-   entry = Journal.objects.get(id = entry)
-   comment = Comment()
-
-   comment.author = request.POST["u"]
-   comment.content = request.POST["c"]
-   comment.time = request.POST["d"]
-   comment.entry = entry
-   comment.save()
-
-   return HttpResponse(json.dumps({ "author": comment.author, "content": comment.content,
-      "time": comment.time }, indent=4), mimetype="json/application")
+      return data

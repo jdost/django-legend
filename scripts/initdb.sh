@@ -20,6 +20,7 @@ if [ $ENGINE = "sqlite3" ]; then
    NAME=""
    PASSWORD=""
    read -p "Enter the name of the .db file (should be in the root of the venv): " TABLE
+   echo ".quit" | sqlite3 $(dirname $0)/../venv/$TABLE
 else
    read -p "Enter the name of the table in the database: " TABLE
    read -p "Enter the username of the database login: " NAME
@@ -37,3 +38,8 @@ echo "password = \"$PASSWORD\"" >> $DBFILE
 echo "host     = \"$HOST\""     >> $DBFILE
 echo "port     = \"$PORT\""     >> $DBFILE
 
+cd $1
+source $1../../bin/activate
+./manage.py syncdb
+./manage.py migrate journal
+./manage.py migrate gallery

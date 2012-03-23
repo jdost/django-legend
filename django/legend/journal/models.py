@@ -1,4 +1,5 @@
 from django.db import models
+from markdown import markdown
 
 # Create your models here.
 
@@ -6,10 +7,15 @@ class Tag(models.Model):
    name = models.CharField(max_length=30)
    url = models.SlugField(max_length=30)
 
-#   @models.permalink
+   @models.permalink
    def get_absolute_url(self):
-#      return ('tag', (), {'slug': self.url})
-      return "/journal/tag/%s/" % self.url
+      return ('journal:tag', [self.url])
+
+   def __json__(self):
+      return {
+         "name": self.name
+      ,  "url": self.get_absolute_url()
+      }
 
 class Journal(models.Model):
    title = models.CharField(max_length=50)
@@ -18,14 +24,16 @@ class Journal(models.Model):
    content = models.TextField()
    url = models.SlugField(max_length=50)
 
-#   @models.permalink
+   @models.permalink
    def get_absolute_url(self):
-#      return ('single', (), {'slug': self.url})
-      return "/journal/%s/" % self.url
+      return ('journal:single', [self.url])
 
-class Comment(models.Model):
-   author = models.CharField(max_length=30)
-   content = models.TextField()
-   time = models.DateTimeField('date added')
-   entry = models.ForeignKey(Journal)
+   def __json__(self):
+      return {
+         "title": self.title
+      ,  "content": markdown(self.content)
+      ,  "url": self.get_absolute_url()
+      ,  "date": self.date.strftime("%A %b, %d")#self.date.__str__()
+      ,  "tags": [tag.__json__() for tag in self.tags.all()]
+      }
 

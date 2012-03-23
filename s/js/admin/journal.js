@@ -47,6 +47,7 @@
 
       handler = settings.handler;
       container = settings.container;
+      container.close();
 
       journal[settings.option].build({
          container : container

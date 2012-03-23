@@ -2,9 +2,8 @@ from django.conf.urls.defaults import *
 from legend import gallery
 
 urlpatterns = patterns('gallery.views',
-   (r'^$', 'default'),
-   (r'^json/(?P<album>\w+)/$', 'album'),
-   (r'^(?P<album>\w+)/$', 'albumStatic'),
-   (r'^(?P<album>\w+)/thumb/(?P<img>\w+)/$', 'thumb'),
-   (r'^(?P<album>\w+)/(?P<img>\w+)/$', 'image'),
+   url(r'^$', 'Gallery', name='gallery'),
+   url(r'^(?P<album>\w+)/$', 'Album', name='album'),
+   url(r'^(?P<album>\w+)/(?P<page>\d+)/', 'Album', name='album_paged'),
+   url(r'^(?P<album>\w+)/img/(?P<image>\w+)/', 'Album', name='image'),
 )

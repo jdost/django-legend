@@ -5,6 +5,7 @@ import db
 DJANGO_ROOT = os.path.dirname(os.path.realpath(django.__file__))
 SITE_ROOT = os.path.dirname(os.path.realpath(__file__))
 WWW_ROOT = os.path.normpath(SITE_ROOT + "/../../")
+ARCHIVE_LOC = os.path.join(WWW_ROOT, "archive")
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
@@ -15,7 +16,8 @@ ADMINS = (
 
 MANAGERS = ADMINS
 
-DATABASE_ENGINE = db.engine           # 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
+DATABASE_ENGINE = 'django.db.backends.' + db.engine
+                                      # 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
 if db.engine is 'sqlite3':
    DATABASE_NAME = os.path.join(WWW_ROOT, db.table)
 else:
@@ -44,11 +46,13 @@ USE_I18N = True
 
 # Absolute path to the directory that holds media.
 # Example: "/home/media/media.lawrence.com/"
-STATIC_ROOT = ''#os.path.join(WWW_ROOT, 's')
+STATIC_ROOT = os.path.join(WWW_ROOT, 's')
 GALLERY_ROOT = os.path.join(STATIC_ROOT, 'img')
-MEDIA_ROOT = GALLERY_ROOT + "/temp"
+MEDIA_ROOT = os.path.join(GALLERY_ROOT, "temp")
+THUMBNAIL_DIR = "thumb"
+THUMBNAIL_DIM = (255,255)
+MAIN_DIM = (1024,1024)
 STATICFILES_DIRS = (
-   os.path.join(WWW_ROOT, 's'),
 )
 
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
@@ -56,6 +60,8 @@ STATICFILES_DIRS = (
 # Examples: "http://media.lawrence.com", "http://example.com/media/"
 MEDIA_URL = ''
 STATIC_URL = '/s'
+GALLERYIMG_URL = STATIC_URL + "/img/{album}/{image}"
+THUMBNAIL_URL = STATIC_URL + "/img/{album}/" + THUMBNAIL_DIR + "/{image}"
 
 # URL prefix for admin media -- CSS, JavaScript and images. Make sure to use a
 # trailing slash.
@@ -67,15 +73,15 @@ SECRET_KEY = 'l38#=ue4ff6e-+-@a@#jmuot*k*km-!07gu4azsadqzkh5!l(-'
 
 # List of callables that know how to import templates from various sources.
 TEMPLATE_LOADERS = (
-    'django.template.loaders.filesystem.load_template_source',
-    'django.template.loaders.app_directories.load_template_source',
-#     'django.template.loaders.eggs.load_template_source',
+    'django.template.loaders.filesystem.Loader',
+    'django.template.loaders.app_directories.Loader',
 )
 
 MIDDLEWARE_CLASSES = (
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django.contrib.messages.middleware.MessageMiddleware',
 )
 
 ROOT_URLCONF = 'legend.urls'
@@ -92,8 +98,8 @@ INSTALLED_APPS = (
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.sites',
-    'django.contrib.markup',
     'django.contrib.staticfiles',
+    'django.contrib.markup',
     'south',
     'legend.journal',
     'legend.gallery',

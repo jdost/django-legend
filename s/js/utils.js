@@ -27,11 +27,11 @@ window.def = typeof window.def === 'function' ? window.def : (function () {
 })();
 
 window.utils = (function () { // {{{
-   var self = this
+   var self = {}
      , nodes = {}
      , js_loc = "/"
      , css_loc = "/"
-     , setValues = function (settings) { // {{{
+     , setValues = self.init = function (settings) { // {{{
       js_loc = settings.javascript || js_loc;
       css_loc = settings.stylesheet || css_loc;
    } // }}}
@@ -39,7 +39,7 @@ window.utils = (function () { // {{{
       nodes.styles = $("#styles");
       nodes.scripts = $("#scripts");
    } // }}}
-     , make = function (nodeType) { // {{{
+     , make = self.make = function (nodeType) { // {{{
       var node = document.createElement(nodeType);
       if (typeof node === 'object') {
          return node;
@@ -47,7 +47,7 @@ window.utils = (function () { // {{{
       return "<" + nodeType + "/>";
    } // }}}
      , LOAD_ANIMATION_LOC = "/css/img/loader.gif"
-     , makeLoader = def({
+     , makeLoader = self.makeLoader = def({
    }, function (settings) { // {{{
       var loader = $(make("div")).addClass("loader");
       loader.append($(make("img")).attr({
@@ -59,7 +59,7 @@ window.utils = (function () { // {{{
    }) // }}}
 
      , scripts = {}
-     , loadScript = def({
+     , loadScript = self.loadScript = def({
       "name" : "Unnamed"
    ,  "path" : null
    }, function (settings) { // {{{
@@ -80,7 +80,7 @@ window.utils = (function () { // {{{
       nodes.scripts.append(scriptNode);
       return self;
    }) // }}}
-     , unloadScript = def({
+     , unloadScript = self.unloadScript = def({
       "name" : "Unnamed"
    }, function (settings) { // {{{
       if (typeof scripts[settings.name] === 'undefined') {
@@ -93,7 +93,7 @@ window.utils = (function () { // {{{
       return self;
    }) // }}}
      , styles = {}
-     , loadStyle = def({
+     , loadStyle = self.loadStyle = def({
       "name" : "Unnamed"
    ,  "path" : null
    }, function (settings) { // {{{
@@ -116,7 +116,7 @@ window.utils = (function () { // {{{
 
       return self;
    }) // }}}
-     , unloadStyle = def({
+     , unloadStyle = self.unloadStyle = def({
       "name" : "Unnamed"
    }, function (settings) { // {{{{
       if (typeof styles[settings.name] === 'undefined') {
@@ -135,7 +135,7 @@ window.utils = (function () { // {{{
       }
    }
      , callbacks = {}
-     , loadModule = def({
+     , loadModule = self.require = def({
       "name"     : "Unnamed"
    ,  "path"     : null
    ,  "callback" : null
@@ -164,7 +164,7 @@ window.utils = (function () { // {{{
 
       return self;
    }) // }}}
-     , moduleLoaded = def({
+     , moduleLoaded = self.loaded = def({
       "name" : "Unnamed"
    }, function (settings) { // {{{
       if (typeof scripts[settings.name] === 'undefined') {
@@ -183,7 +183,7 @@ window.utils = (function () { // {{{
 
       return self;
    }) // }}}
-     , centerNode = function (node) {
+     , centerNode = self.center = function (node) {
       var base = node.parent();
       var left = (base.innerWidth() - node.outerWidth())/2,
           above = (base.innerHeight() - node.outerHeight())/2;
@@ -193,25 +193,28 @@ window.utils = (function () { // {{{
       ,  left : left
       });
    }
+
+     , isUndef = self.isUndef = function (a) {
+      return typeof a === 'undefined';
+   }
+     , isNode = self.isNode = function (a) {
+      return a instanceof Node;
+   }
+     , isJq = self.isJq = function (a) {
+      return a instanceof jQuery;
+   }
+     , isNull = self.isNull = function (a) {
+      return a === null;
+   }
+     , isFunc = self.isFunc = function (a) {
+      return typeof a === 'function';
+   }
+     , isObj = self.isObj = function (a) {
+      return typeof a === 'object';
+   }
      ;
 
    $(document).ready(setup);
-   return {
-      make         : make
-   ,  init         : setValues
-   ,  center       : centerNode
-
-   ,  loadStyle    : loadStyle
-   ,  unloadStyle  : unloadStyle
-
-   ,  loadScript   : loadScript
-   ,  unloadScript : unloadScript
-
-   ,  require      : loadModule
-   ,  loaded       : moduleLoaded
-
-
-   ,  makeLoader   : makeLoader
-   };
+   return self;
 })(); // }}}
 

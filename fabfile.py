@@ -12,10 +12,10 @@ def deploy():
    local("cd " + site_loc)
 # setups up the log folder
    local("mkdir " + p.join(site_loc, "logs"))
-# setup db.py file
-   setup_db()
 # setup virtualenv
    setup_virtual()
+# setup db.py file
+   setup_db()
 # setup misc files
    setup_js()
    compile_less()
@@ -31,8 +31,7 @@ def setup_virtual():
    local('virtualenv2 --no-site-packages ' + venv_loc)
    local('cd ' + venv_loc)
    local('ln -s ' + django_loc + ' ' + p.join(venv_loc, 'django'))
-   local('source ' + p.join(venv_loc,'bin','activate'))
-   local('pip install -r ' + p.join(site_loc, 'scripts', 'req'))
+   local(p.join(site_loc, 'scripts', 'vsetup.sh') + ' ' + venv_loc)
 
 def auth():
    auth_loc = p.join(django_loc, "legend", "ws", "AUTH")

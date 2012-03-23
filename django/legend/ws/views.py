@@ -1,6 +1,7 @@
 from django.http import HttpResponse, QueryDict
 from legend.journal import models as journal
 from legend.gallery import models as gallery
+from legend.utils import gallery_tools as tools
 from legend import settings
 
 import json
@@ -224,3 +225,116 @@ class Tag(View):
             entry.tags.remove(tag)
          resp = {}
       return resp
+
+definitions['album'] = {
+}
+class Album(View):
+   def __call__(self, request, id=None):
+      if not isVerified(request):
+         return BAD_LOGIN
+
+      if request.FILES:
+         return format(self.files(request, id))
+      if request.method == 'POST':
+         return format(self.post(request, id))
+      elif request.method == 'GET':
+         return format(self.get(request, id))
+      elif request.method == 'DELETE':
+         return format(self.delete(request, id))
+
+   def get(self, request, id):
+      if id is None:
+         albums = gallery.Album.objects.all()
+         album_set = []
+         for album in albums:
+            album_set.append({
+               "id": album.id
+            ,  "name": album.name
+            ,  "description": album.description
+            })
+
+         return { "album_set": album_set }
+      else:
+         album = gallery.Album.objects.get(id=int(id))
+         return { "album": {
+            "id": id
+         ,  "name": album.name
+         ,  "description": album.description
+         } }
+
+   def post(self, request, id):
+      post = request.POST
+
+      if id is None:
+         album = gallery.Album()
+         album.name = post["name"]
+         album.description = post["description"]
+         album.url = slugify(album.name)
+         tools.create_album(album.url)
+
+         album.save()
+      else:
+         album = gallery.Album.objects.get(id=int(id))
+         if "name" in post and album.name != post["name"]:
+            album.name = post["name"]
+            tools.move_album(album.url, slugify(album.name))
+            album.url = slugify(album.name)
+         if "description" in post and album.description != post["description"]:
+            album.description = post["description"]
+         if "cover" in post and album.cover != post["cover"]:
+            album.cover = post["cover"]
+
+         album.save()
+
+      return self.get(request, album.id)
+
+   def delete(self, request, id):
+      album = gallery.Album.objects.get(id=int(id))
+      tools.remove_album(album.url)
+      album.delete()
+      return {}
+
+   def files(self, request, id):
+      tools.handle_images(request.FILES['images'], id)
+      return {}
+
+class Image(View):
+   def __call__(self, request, id=None):
+      if not isVerified(request):
+         return BAD_LOGIN
+
+      if request.POST:
+         return format(self.post(request, id))
+      else:
+         return format(self.get(request, id))
+
+   def get(self, request, id):
+      if not id:
+         return {} # BAD_REQ
+
+      album = gallery.Album.objects.get(id=str(id))
+      images = album.image_set.all()
+      image_set = []
+      for image in images:
+         image_set.append({
+            "id": image.id
+         ,  "thumbnail": image.get_thumbnail_url()
+         ,  "url": image.get_static_url()
+         ,  "caption": image.caption
+         })
+
+      return {
+         "album": {
+            "name": album.name
+         }
+      ,  "images": image_set
+      }
+
+   def post(self, request, id):
+      post = request.POST
+
+      image = gallery.Image.objects.get(id=str(id))
+      image.caption = post["caption"]
+      image.save()
+
+      return {}

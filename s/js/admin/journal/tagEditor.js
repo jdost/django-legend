@@ -8,8 +8,9 @@
    var
        self
      , node
-     , card
+     , card = null
      , handler
+     , container
      , tag
      , entries
      , table
@@ -17,13 +18,15 @@
       utils.loaded({ name: "journal.tagEditor" });
    }
      , build = def({
-      tag     : null
-   ,  handler : null
+      tag       : null
+   ,  handler   : null
+   ,  container : null
    }, function (settings) {
       if (settings.tag === null) {
          return;
       }
 
+      container = settings.container;
       handler = settings.handler;
       handler.loadTag({
          id       : settings.tag
@@ -35,6 +38,7 @@
       });
    })
      , drawWindow = function () {
+      if (!utils.isNull(card)) { card.close(); }
       node = $(utils.make("div"))
          .addClass("journal tagEditor window");
       node.append($(utils.make("h3"))
@@ -57,8 +61,8 @@
          entries[i].status = entries[i].tagged;
       }
 
-      card = ui.cards.build({
-         contents : node
+      card = container.make({
+         content  : node
       ,  tree     : "tags"
       ,  name     : "editor"
       });
@@ -185,6 +189,7 @@
          });
       }
       card.close();
+      card = null;
    }
      , toggle = function (entry, index) {
       entry.status = !entry.status;

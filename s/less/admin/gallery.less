@@ -1,0 +1,174 @@
+@import "../lib";
+@import "../buttons";
+
+.buttons;
+
+.gallery.browser {
+   .newAlbum {
+      border-radius: 0.2em;
+      padding: 2px 20px;
+      margin: 5px 100px;
+      font-size: 1em;
+
+      .green;
+   }
+
+   .album {
+      color: #FFF;
+      .title {
+         float: left;
+      }
+      button {
+         padding: 0 12px;
+         margin: 0 5px;
+         border-radius: 0.2em;
+         font-size: 0.8em;
+         float: right;
+      }
+      .edit { .orange; }
+      .caption { .orange; }
+      .delete { .red; }
+      .clear;
+   }
+}
+
+.gallery.editor {
+   width: 800px;
+   margin-left: auto;
+   margin-right: auto;
+
+   input[name=name] {
+      margin-top: 10px;
+   }
+
+   input, textarea {
+      width: 90%;
+      border-radius: 10px;
+      font-size: 1.4em;
+      font-family: 'Ubuntu', sans-serif;
+      padding: 5px;
+      margin: 4px 5%;
+      opacity: 0.8;
+
+      &:hover, &:focus {
+         opacity: 1.0;
+      }
+   }
+
+   textarea {
+      font-size: 1.2em;
+      height: 150px;
+   }
+
+   input[type="file"] {
+      color: white;
+      opacity: 1.0;
+   }
+
+   .buttons {
+      text-align: right;
+      padding-bottom: 10px;
+
+      button {
+         font-family: 'Ubuntu', sans-serif;
+         padding: 5px 10px;
+         margin: 1px 5px;
+         border-radius: 8px;
+         font-size: 1.1em;
+         text-transform: uppercase;
+      }
+
+      .apply { .green; }
+      .cancel { .red; }
+   }
+}
+
+.gallery.captioner {
+   .thumbViewer {
+      height: 150px;
+      margin: 2px 8px;
+      padding-bottom: 15px;
+      overflow-x: auto;
+      overflow-y: hidden;
+      white-space: nowrap;
+
+      .thumb {
+         display: inline;
+         height: 100%;
+         margin: 0 3px;
+         opacity: 0.7;
+         position: relative;
+
+         &:hover {
+            opacity: 1.0;
+         }
+
+         img {
+            display: inline;
+            height: 100%;
+         }
+
+         .capIcon {
+            position: absolute;
+            display: block;
+            color: black;
+            font-weight: bold;
+            top: 0;
+            right: 2px;
+         }
+      }
+   }
+
+   .imageViewer {
+      padding: 12px;
+      text-align: center;
+      position: relative;
+
+      .current {
+         margin: 6px auto;
+         max-width: 100%;
+         max-height: 600px;
+      }
+      .cover {
+         .green;
+         display: none;
+         border-radius: 0.35em;
+         position: absolute;
+         top: 22px;
+         right: 16px;
+      }
+      .delete {
+         .red;
+         display: none;
+         border-radius: 0.35em;
+         position: absolute;
+         top: 48px;
+         right: 16px;
+      }
+
+      .caption {
+         display: none;
+         position: absolute;
+         bottom: 18px;
+         right: 12px;
+         width: 250px;
+         height: 100px;
+         background: rgba(0,0,0,0.6);
+         color: white;
+         border: 0;
+         border-radius: 0.4em;
+         padding: 3px;
+         font-size: 0.8em;
+         font-family: 'Ubuntu', sans-serif;
+
+         &:hover, &:focus {
+            //text-shadow: 2px 2px 4px #DDD;
+         }
+      }
+   }
+   .imageViewer.active {
+      .cover, .caption, .delete {
+         display: block;
+      }
+   }
+}

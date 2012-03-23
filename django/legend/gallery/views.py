@@ -1,43 +1,56 @@
 from django.http import HttpResponse,HttpResponseRedirect
 from django.shortcuts import render_to_response
-from legend.gallery.models import *
+from django.core.urlresolvers import reverse
+import legend.gallery.models as m
 from legend.utils import *
 
 import json
+from math import ceil
 
 # Create your views here.
-def default(request):
-   aList = Album.objects.all()
-   h = gen_header()
 
-   return render_to_response('gallery.html', {'gallery': True, 'pagename': "Gallery",
-                              'albumlist': aList, 'header': h})
+class Gallery(View):
+   def __call__(self, request):
+      data = {
+         "album_list": self.getAlbums()
+      ,  "title": GALLERY["title"]
+      }
+      return response(request, GALLERY, data)
 
-def album(request, album):
-   src = Album.objects.get(url=album)
-   imgSet = src.image_set.all()
-   resp = []
-   i = 0
-   for img in imgSet:
-      resp.append({"views": img.views, "caption": img.caption,
-         "thumb": "/img/" + album + "/thumbs/" + img.file,
-         "main": "/img/" + album + "/" + img.file, "index": i})
-      i += 1
-   return HttpResponse(json.dumps({"images": resp}, indent=4), mimetype="text/plain")
+   def getAlbums(self):
+      return m.Album.objects.all()
 
-def albumStatic(request, album):
-   src = Album.objects.get(url=album)
-   h = gen_header()
-   return render_to_response('album.html', {'pagename': src.name, 'gallery': True, 'header': h})
+PAGE_SIZE = 25
+class Album(View):
+   def __call__(self, request, album=None, image=None, page="0"):
+      if album is None:
+         return HttpResponse(status=400)
 
-def image(request, album, img):
-   image = Image.objects.get(url=img, album=Album.objects.get(url=album))
-   image.views = image.views + 1
-   # image.save()
-   # increase view count of image
-   return HttpResponseRedirect("/img/%s/%s" % (album, image.file), mimetype="image/jpeg")
+      self.album = m.Album.objects.get(url=album)
+      self.settings = GALLERY
 
-def thumb(request, album, img):
-#   image = Image.objects.get(url=img)
-   i = Image.objects.filter(url=img, album=Album.objects.get(url=album))
-   return HttpResponseRedirect("/img/%s/thumbs/%s" % (album, i[0].file))
+      if image is None:
+         return self.album_list(request, page)
+      return self.handle_image(image)
+
+   def handle_image(self, image):
+      image = self.album.image_set.get(url=image)
+      image.views += 1
+      image.save()
+      return HttpResponseRedirect(image.get_static_url())
+
+   def album_list(self, request, page):
+      page = int(page)
+      url_alias='gallery:album_paged'
+      page_count = int(ceil(self.album.image_set.count() / float(PAGE_SIZE)))
+      data = {
+            "album": self.album
+         ,  "image_list": self.album.image_set.all()[page*PAGE_SIZE:(page+1)*PAGE_SIZE]
+         ,  "title": self.settings["title"] + ":" + self.album.name
+         ,  "nav": {
+               "page_count": page_count
+            ,  "pages": map(lambda p: reverse(url_alias, kwargs={'page':p, 'album':self.album.url}), range(page_count))
+            ,  "current": page
+            }
+         }
+      return response(request, self.settings, data)

@@ -71,11 +71,12 @@
          node.append(loader);
       }
 
-      card = ui.cards.build({
-         contents : node
-      ,  tree     : "entries"
+      card = container.make({
+         content  : node
       ,  name     : "browser"
       });
+
+      card.focus();
 
       return;
    }
@@ -226,7 +227,7 @@
          }
 
          return zfill(d.getMonth()+1, 2) + "/" +
-            zfill(d.getDate()+1, 2) + "/" +
+            zfill(d.getDate(), 2) + "/" +
             zfill(d.getFullYear(), 4);
       };
 

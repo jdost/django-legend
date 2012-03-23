@@ -6,6 +6,7 @@
    }
 
    var self
+     , container
      , handler
      , node
      , card
@@ -14,9 +15,11 @@
       utils.loaded({ name: "journal.tags" });
    }
      , build = def({
-      "handler" : null
+      "handler"   : null
+   ,  "container" : null
    }, function (settings) {
       handler = settings.handler;
+      container = settings.container;
 
       getTags();
 
@@ -45,8 +48,8 @@
          table.append(makeTag(tags[i]));
       }
 
-      card = ui.cards.build({
-         contents : node
+      card = container.make({
+         content  : node
       ,  tree     : "tags"
       ,  name     : "browser"
       });
@@ -83,8 +86,9 @@
          ,  path: "admin/journal/tagEditor"
          ,  callback: function () {
                journal.tagEditor.build({
-                  tag     : tag.id
-               ,  handler : handler
+                  tag       : tag.id
+               ,  handler   : handler
+               ,  container : container
                });
             }
          });

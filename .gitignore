@@ -8,3 +8,5 @@ db.py
 __pycache__/*
 venv/*
 s/js/lib/*
+s/img/*
+*AUTH

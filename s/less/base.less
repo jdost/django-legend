@@ -14,12 +14,16 @@ body {
    background: @charcoal;
 }
 
+@default: #E3D000;
+@journal: #C80000;
+@gallery: #0088C8;
 #header {
    position: relative;
    background: @charcoal;
    color: @ivory;
    font-size: 1.3em;
    width: 100%;
+   z-index: 10;
 
    h1,ul {
       margin-top: 20px;
@@ -28,14 +32,16 @@ body {
 
    h1 {
       padding-left: 30px;
+      padding-right: 15px;
       font-size: 1.5em;
       position: absolute;
+      border-bottom-color: @default;
    }
 
    ul {
       list-style: none;
       padding: 10px 0 0 120px;
-      margin-bottom: 4px;
+      margin-bottom: 6px;
 
       li {
          float: left;
@@ -46,15 +52,15 @@ body {
          }
       }
 
-      li.journal { border-bottom-color: #C80000; }
-      li.gallery { border-bottom-color: #0088C8; }
+      li.journal { border-bottom-color: @journal; }
+      li.gallery { border-bottom-color: @gallery; }
 
    }
 
    hr {
       clear: both;
       margin: 0;
-      height: 4px;
+      height: 6px;
       position: absolute;
       bottom: 0;
       color: transparent;
@@ -77,10 +83,10 @@ body {
    }
    ul {
       padding-top: 5px;
-      margin-bottom: 2px;
+      margin-bottom: 4px;
    }
    hr {
-      height: 2px;
+      height: 4px;
    }
 }
 .header-holder.snap { display: block; }
@@ -92,7 +98,9 @@ body {
    color: @ivory;
    font-size: 0.85em;
    padding-top: 10px;
+   padding-bottom: 10px;
    border-top: solid 6px transparent;
+   z-index: 2;
 
    ul {
       margin: 0;
