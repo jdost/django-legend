@@ -33,7 +33,7 @@ class Journal(models.Model):
          "title": self.title
       ,  "content": markdown(self.content)
       ,  "url": self.get_absolute_url()
-      ,  "date": self.date.strftime("%A %b, %d")#self.date.__str__()
+      ,  "date": self.date.strftime("%A, %b %d")#self.date.__str__()
       ,  "tags": [tag.__json__() for tag in self.tags.all()]
       }
 
