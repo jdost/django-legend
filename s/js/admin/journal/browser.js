@@ -286,7 +286,9 @@
          return;
       }
 
-      console.log("delete " + settings.entry.title);
+      handler.deleteEntry({
+         id : settings.entry.id
+      });
    })
      ;
 

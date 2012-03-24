@@ -81,3 +81,7 @@ class Entry(View):
          data["url_set"] = url_set
 
       return data
+
+class RSS(View):
+   def __call__(self, request):
+      return ""

@@ -220,6 +220,28 @@
          ,  callback : notifier
          });
       })
+      , deleteImage : def({
+         "id"  : null
+      }, function (settings) {
+         if (utils.isNull(settings.id)) {
+            return;
+         }
+
+         var notifier = function (response) {
+            notify.add({
+               name     : "imageDeletion"
+            ,  message  : "Deleting Image: " + (response.error ? "failed" : "successful")
+            ,  classes  : response.error ? "error" : "success"
+            });
+         };
+
+         handler.request({
+            target    : LOCS.IMAGES + settings.id.toString() + "/"
+         ,  data      : {}
+         ,  type      : 'DELETE'
+         ,  callback  : notifier
+         });
+      })
       , UPLOAD_URL : LOCS.ALBUMS
    }
      ;
