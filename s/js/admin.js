@@ -87,7 +87,7 @@ window.admin = (function () { // {{{
          }
 
          var option = {
-            "node"   : $(utils.make("div"))
+            "node"   : $(utils.make("a"))
                .addClass("navLink")
                .click(function (data) {
                   showSubs({"link": option, "data": data});//openLink({"link": option, "data": data});
@@ -129,7 +129,7 @@ window.admin = (function () { // {{{
          subsVis = true;
 
          var makeSub = function (sub) {
-            var el = $(utils.make("span"))
+            var el = $(utils.make("a"))
                .addClass("sub")
                .text(sub.name)
                .click(function (data) {
