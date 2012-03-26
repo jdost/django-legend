@@ -100,6 +100,9 @@
       });
    }
      , deleteImage = function () {
+      handler.deleteImage({
+         id : current.id
+      });
    }
      , makeCaptionIcon = function () {
       return $(utils.make("span"))

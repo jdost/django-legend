@@ -94,6 +94,9 @@
          });
    }
      , deleteTag = function (tag) {
+      handler.deleteTag({
+         "id" : tag.id
+      });
    }
      ;
 

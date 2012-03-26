@@ -259,16 +259,61 @@
       ,  callback : notifier
       });
    })
-     , deleteEntry
+     , deleteEntry = def({
+      "id"  : null
+   }, function (settings) {
+      if (settings.id === null) {
+         return;
+      }
+
+      var notifier = function (response) {
+         notify.add({
+            name  : "entryDeleted"
+         ,  message  : "Entry Deletion: " + (response.error ? "failed" : "successful")
+         ,  classes  : response.error ? "error" : "success"
+         });
+      };
+
+      handler.request({
+         target     : LOCS.ENTRY + settings.id + "/"
+      ,  data       : {}
+      ,  callback   : notifier
+      ,  type       : 'DELETE'
+      });
+   })
+     , deleteTag = def({
+      "id"  : null
+   }, function (settings) {
+      if (settings.id === null) {
+         return;
+      }
+
+      var notifier = function (response) {
+         notify.add({
+            name  : "tagDeleted"
+         ,  message  : "Tag Deletion: " + (response.error ? "failed" : "successful")
+         ,  classes  : response.error ? "error" : "success"
+         });
+      };
+
+      handler.request({
+         target   : LOCS.TAGS + settings.id + "/"
+      ,  data     : {}
+      ,  type     : 'DELETE'
+      ,  callback : notifier
+      });
+   })
      , hInterface = {
       loadEntries : getEntryList
    ,  loadEntry   : getEntryInfo
    ,  updateEntry : updateEntry
    ,  addEntry    : createEntry
+   ,  deleteEntry : deleteEntry
 
    ,  getTags     : getTagList
    ,  loadTag     : getTagInfo
    ,  updateTag   : updateTag
+   ,  deleteTag   : deleteTag
    }
      ;
 

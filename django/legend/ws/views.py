@@ -3,6 +3,7 @@ from legend.journal import models as journal
 from legend.gallery import models as gallery
 from legend.utils import gallery_tools as tools
 from legend import settings
+from legend.utils import archiver
 
 import json
 import hashlib
@@ -165,7 +166,10 @@ class Entry(View):
       return {}
 
    def delete(self, request, id):
+      if id is None:
+         return {}
       entry = journal.Journal.objects.get(id=int(id))
+      archiver.entry_archive(id)
       entry.delete()
       return {}
 
@@ -180,8 +184,12 @@ class Tag(View):
 
       if request.POST:
          return format(self.post(request, id))
-      else:
+      elif request.method == "GET":
          return format(self.get(request, id))
+      elif request.method == "DELETE":
+         return format(self.delete(request, id))
+      else:
+         return format({"method": request.method})
 
    def get(self, request, id):
       if id is None:
@@ -225,6 +233,18 @@ class Tag(View):
             entry.tags.remove(tag)
          resp = {}
       return resp
+
+   def delete(self, request, id):
+      if id is None:
+         resp = {}
+      else:
+         tag = journal.Tag.objects.get(id=int(id))
+         archiver.tag_archive(id)
+         tag.delete()
+         resp = {}
+
+      return resp
+
 
 definitions['album'] = {
 }
@@ -290,7 +310,8 @@ class Album(View):
 
    def delete(self, request, id):
       album = gallery.Album.objects.get(id=int(id))
-      tools.remove_album(album.url)
+      archiver.album_archive(id)
+      #tools.remove_album(album.url)
       album.delete()
       return {}
 
@@ -305,8 +326,10 @@ class Image(View):
 
       if request.POST:
          return format(self.post(request, id))
-      else:
+      elif request.method == "GET":
          return format(self.get(request, id))
+      elif request.method == "DELETE":
+         return format(self.delete(request, id))
 
    def get(self, request, id):
       if not id:
@@ -337,4 +360,10 @@ class Image(View):
       image.caption = post["caption"]
       image.save()
 
+      return {}
+
+   def delete(self, request, id):
+      image = gallery.Image.objects.get(id=str(id))
+      archiver.image_archive(id)
+      image.delete()
       return {}
