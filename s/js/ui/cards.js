@@ -90,10 +90,10 @@
             .addClass(PLACEHOLDER)
             .html("&nbsp;")
             .insertAfter(template);
-      } else if (placeHolder.outerHeight(true) > template.outerHeight(true)) {
+      } else if (placeHolder.outerHeight() > template.outerHeight()) {
          return;
       }
-      placeHolder.css({ "height": template.outerHeight(true) });
+      placeHolder.css({ "height": template.outerHeight() });
       return;
    }
      , clearPlaceHolder = function (height) {
