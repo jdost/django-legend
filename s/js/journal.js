@@ -6,6 +6,9 @@
       pages[server.pages.focused] = $(".page");
 
       current = server.pages.tree;
+      initialPage = {
+         current_set : current
+      };
       book[current] = ui.pages({
          container  : $("#journal")
       ,  name       : server.pages.tree
@@ -28,6 +31,7 @@
       $(".pageControls").remove();
    }
      , pages = {}
+     , initialPage
      , pageChange = function (pageData) {
       if (utils.isJq(pages[pageData.number])) {
          pageData.container.append(pages[pageData.number].children()).addClass("journalPage");
@@ -44,6 +48,9 @@
       });
    }
      , buildPage = function (name, data) {
+      if (utils.isNull(data)) {
+         data = initialPage;
+      }
       if (utils.isUndef(book[data.current_set])) {
          book[data.current_set] = ui.pages({
             container  : $("#journal")

@@ -15,6 +15,7 @@
      , handler
      , current = 0
      , stack = []
+     , initial
      , setup = function () {
       utils.loaded({ name: "utils.tracker" });
       // test for type support
@@ -26,14 +27,15 @@
       }
    }
      , popHandler = function (event) {
-      if (current > 0 && event.state === stack[current-1]) {
+      var state = event.state || initial;
+      if (current > 0 && state === stack[current-1]) {
          current--;
-      } else if (event.state === stack[current+1]) {
+      } else if (state === stack[current+1]) {
          current++;
       } else {
          return;
       }
-      var key = event.state || window.location.pathname;
+      var key = state || window.location.pathname;
       handler(translate(key), reqs[translate(key)] || null);
    }
      , init = self.initialize = def({
@@ -158,7 +160,8 @@
       return base.substr(1,base.length-2).replace(/\//g,":");
    }
      ;
-   stack.push(window.location.pathname);
+   initial = window.location.pathname;
+   stack.push(initial);
 
    $(document).ready(setup);
 
