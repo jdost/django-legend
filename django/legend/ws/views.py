@@ -55,7 +55,15 @@ def format(data):
    return HttpResponse(json.dumps(data), mimetype="application/json")
 def slugify(base):
    return base.lower().replace(" ", "_").replace(",", "")
-
+def jsonDate(date):
+   return {
+         "year": date.year
+      ,  "month": date.month
+      ,  "day": date.day
+      ,  "hour": date.hour
+      ,  "minute": date.minute
+      ,  "second": date.second
+      }
 class View(object):
    def __new__(cls, request, **kwargs):
       obj = super(View, cls).__new__(cls)
@@ -102,7 +110,7 @@ class Entry(View):
          for entry in entry_set:
             resp["entries"].append({
                   "title": entry["title"]
-               ,  "date": entry["date"].isoformat()
+               ,  "date": jsonDate(entry["date"])
                ,  "id": entry["id"]
                })
       else:
@@ -114,7 +122,7 @@ class Entry(View):
          resp["entry"] = {
                "title": entry.title
             ,  "content": entry.content
-            ,  "date": entry.date.isoformat()
+            ,  "date": jsonDate(entry.date)
             ,  "id": entry.id
             ,  "tags": tags
             }

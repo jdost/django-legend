@@ -70,7 +70,8 @@
          }
          var dataSet = response.data.entries;
          for (var i = 0, l = dataSet.length; i < l; i++) {
-            dataSet[i].date = new Date(dataSet[i].date);
+            var d = dataSet[i].date;
+            dataSet[i].date = new Date(d.year, d.month, d.day, d.hour, d.minute, d.second);
          }
          settings.callback(dataSet);
       };
