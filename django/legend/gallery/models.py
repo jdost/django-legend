@@ -33,7 +33,7 @@ class Image(models.Model):
    views = models.IntegerField(default=0)
    caption = models.CharField(max_length=500)
    album = models.ForeignKey(Album)
-#   date = models.DateTimeField('date taken')
+   date = models.DateTimeField('date taken')
 
    @models.permalink
    def get_absolute_url(self):
@@ -51,5 +51,5 @@ class Image(models.Model):
       ,  "thumbnail": self.get_thumbnail_url()
       ,  "views": self.views
       ,  "caption": self.caption
-#      ,  "date": self.date.__str__()
+      ,  "date": self.date.__str__()
       }
