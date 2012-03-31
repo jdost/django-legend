@@ -135,7 +135,8 @@
 
       $body.append(node);
       if (settings.backer) {
-         var backer = $(utils.make("div"))
+         var backer = $(utils.make("a"))
+            .attr("href", "javascript:;")
             .addClass("viewerBacker")
             .html("&nbsp;")
             .click(close);
