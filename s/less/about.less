@@ -1,24 +1,44 @@
 @import "lib";
 
 #about {
-   padding: 8px;
-   height: 400px;
+   padding: 8px 130px;
    background: #FFF;
    color: @charcoal;
 
    h1 {
       font-size: 2.0em;
+      margin: 20px 10px;
    }
 
    label {
+      position: absolute;
       font-weight: bold;
       padding-right: 4px;
+      text-align: right;
+      width: 140px;
+      margin-left: -150px;
    }
 
    .info {
       padding-bottom: 15px;
+      padding-left: 150px;
    }
 
    .blurb {
+      padding-left: 150px;
+      p {
+         padding-bottom: 10px;
+         text-indent: 25px;
+         line-height: 1.4em;
+      }
+   }
+
+   a {
+      color: #1146F5;
+      font-weight: bold;
+
+      &:hover {
+         color: #4176F5;
+      }
    }
 }
