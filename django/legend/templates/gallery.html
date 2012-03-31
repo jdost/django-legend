@@ -7,11 +7,12 @@
          {% if data.album_list %}
          <div class="albumList">
             {% for album in data.album_list %}
-            <a href="{{ album.get_absolute_url }}">
+            <a href="{{ album.get_absolute_url }}" class="album">
                <div class="albumCover">
                   <div class="cover"><img src="{{ album.get_cover_url }}" /></div>
                   <h3>{{ album.name }}</h3>
                   <div class="description">{{ album.description|markdown }}</div>
+               </div>
             </a>
             {% endfor %}
             <script type="text/javascript">
