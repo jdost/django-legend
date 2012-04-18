@@ -125,9 +125,12 @@
       }
    })
      , handleChange = function (event) {
-      event.preventDefault();
       var target = $(this).attr("href");
+      if (target.match(/^http:\/\//)) {
+         return;
+      }
 
+      event.preventDefault();
       // check if back
       if (current > 0 && stack[current-1] === target) {
          pusher.back();
