@@ -24,30 +24,30 @@ window.def = typeof window.def === 'function' ? window.def : (function () {
    }
 
    return def;
-})();
+}());
 
 window.utils = (function () { // {{{
-   var self = {}
-     , nodes = {}
-     , js_loc = "/"
-     , css_loc = "/"
-     , setValues = self.init = function (settings) { // {{{
+   var self = {},
+      nodes = {},
+      js_loc = "/",
+      css_loc = "/",
+     setValues = self.init = function (settings) { // {{{
       js_loc = settings.javascript || js_loc;
       css_loc = settings.stylesheet || css_loc;
-   } // }}}
-     , setup = function () { // {{{
+   }, // }}}
+     setup = function () { // {{{
       nodes.styles = $("#styles");
       nodes.scripts = $("#scripts");
-   } // }}}
-     , make = self.make = function (nodeType) { // {{{
+   }, // }}}
+     make = self.make = function (nodeType) { // {{{
       var node = document.createElement(nodeType);
       if (typeof node === 'object') {
          return node;
       }
       return "<" + nodeType + "/>";
-   } // }}}
-     , LOAD_ANIMATION_LOC = "/css/img/loader.gif"
-     , makeLoader = self.makeLoader = def({
+   }, // }}}
+      LOAD_ANIMATION_LOC = "/css/img/loader.gif",
+     makeLoader = self.makeLoader = def({
    }, function (settings) { // {{{
       var loader = $(make("div")).addClass("loader");
       loader.append($(make("img")).attr({
@@ -56,32 +56,29 @@ window.utils = (function () { // {{{
       );
 
       return loader;
-   }) // }}}
+   }), // }}}
 
-     , scripts = {}
-     , loadScript = self.loadScript = def({
-      "name" : "Unnamed"
-   ,  "path" : null
+      scripts = {},
+     loadScript = self.loadScript = def({
+      "name": "Unnamed",
+      "path": null
    }, function (settings) { // {{{
-      if (typeof scripts[settings.name] !== 'undefined') {
-         return;
-      } else if (settings.path === null) {
-         return;
-      }
+      if (typeof scripts[settings.name] !== 'undefined') { return; }
+      if (settings.path === null) { return; }
 
       var path = js_loc + settings.path + ".js";
 
       var scriptNode = $(make("script"))
          .attr({
-            "type" : "text/javascript"
-         ,  "src"  : path
+            "type": "text/javascript",
+            "src": path
          });
       scripts[settings.name] = scriptNode;
       nodes.scripts.append(scriptNode);
       return self;
-   }) // }}}
-     , unloadScript = self.unloadScript = def({
-      "name" : "Unnamed"
+   }), // }}}
+     unloadScript = self.unloadScript = def({
+      "name": "Unnamed"
    }, function (settings) { // {{{
       if (typeof scripts[settings.name] === 'undefined') {
          return;
@@ -91,33 +88,30 @@ window.utils = (function () { // {{{
       delete scripts[settings.name];
 
       return self;
-   }) // }}}
-     , styles = {}
-     , loadStyle = self.loadStyle = def({
-      "name" : "Unnamed"
-   ,  "path" : null
+   }), // }}}
+      styles = {},
+     loadStyle = self.loadStyle = def({
+      "name": "Unnamed",
+      "path": null
    }, function (settings) { // {{{
-      if (typeof styles[settings.name] !== 'undefined') {
-         return;
-      } else if (settings.path === null) {
-         return;
-      }
+      if (typeof styles[settings.name] !== 'undefined') { return; }
+      if (settings.path === null) { return; }
 
       var path = css_loc + settings.path + ".css";
 
       var styleNode = $(make("link"))
          .attr({
-            "type" : "text/css"
-         ,  "rel"  : "stylesheet"
-         ,  "href" : path
+            "type": "text/css",
+            "rel": "stylesheet",
+            "href": path
          });
       styles[settings.name] = styleNode;
       nodes.styles.append(styleNode);
 
       return self;
-   }) // }}}
-     , unloadStyle = self.unloadStyle = def({
-      "name" : "Unnamed"
+   }), // }}}
+     unloadStyle = self.unloadStyle = def({
+      "name": "Unnamed"
    }, function (settings) { // {{{{
       if (typeof styles[settings.name] === 'undefined') {
          return;
@@ -127,27 +121,24 @@ window.utils = (function () { // {{{
       delete styles[settings.name];
 
       return self;
-   }) // }}}
-     , modules = {
+   }), // }}}
+      modules = {
       utils: {
-         path   : "utils"
-      ,  loaded : true
+         path: "utils",
+         loaded: true
       }
-   }
-     , callbacks = {}
-     , loadModule = self.require = def({
-      "name"     : "Unnamed"
-   ,  "path"     : null
-   ,  "callback" : null
+   },
+      callbacks = {},
+     loadModule = self.require = def({
+      "name": "Unnamed",
+      "path": null,
+      "callback": null
    }, function (settings) { // {{{
       if (typeof modules[settings.name] !== 'undefined') {
-         if (settings.callback !== null) {
-            settings.callback();
-         }
+         if (settings.callback !== null) { settings.callback(); }
          return self;
-      } else if (settings.path === null) {
-         return;
       }
+      if (settings.path === null) { return; }
 
       if (typeof settings.callback === 'function') {
          if (typeof callbacks[settings.name] !== 'object') {
@@ -157,15 +148,15 @@ window.utils = (function () { // {{{
       }
 
       modules[settings.name] = {
-         "path"   : settings.path
-      ,  "loaded" : false
+         "path": settings.path,
+         "loaded": false
       };
       loadScript(settings);
 
       return self;
-   }) // }}}
-     , moduleLoaded = self.loaded = def({
-      "name" : "Unnamed"
+   }), // }}}
+     moduleLoaded = self.loaded = def({
+      "name": "Unnamed"
    }, function (settings) { // {{{
       if (typeof scripts[settings.name] === 'undefined') {
          return;
@@ -175,46 +166,35 @@ window.utils = (function () { // {{{
       if (typeof callbacks[settings.name] !== 'object') {
          return self;
       }
-      var cb_set = callbacks[settings.name];
-      for (var i = 0, l = cb_set.length; i < l; i++) {
+      var cb_set = callbacks[settings.name],
+         i;
+      for (i = 0, l = cb_set.length; i < l; i++) {
          cb_set[i]();
       }
       delete callbacks[settings.name];
 
       return self;
-   }) // }}}
-     , centerNode = self.center = function (node) {
+   }), // }}}
+     centerNode = self.center = function (node) {
       var base = node.parent();
       var left = (base.innerWidth() - node.outerWidth())/2,
           above = (base.innerHeight() - node.outerHeight())/2;
 
       node.css({
-         top  : above
-      ,  left : left
+         top: above,
+         left: left
       });
-   }
-
-     , isUndef = self.isUndef = function (a) {
-      return typeof a === 'undefined';
-   }
-     , isNode = self.isNode = function (a) {
-      return a instanceof Node;
-   }
-     , isJq = self.isJq = function (a) {
-      return a instanceof jQuery;
-   }
-     , isNull = self.isNull = function (a) {
-      return a === null;
-   }
-     , isFunc = self.isFunc = function (a) {
-      return typeof a === 'function';
-   }
-     , isObj = self.isObj = function (a) {
-      return typeof a === 'object';
-   }
+   },
+   // Various object type checker functions
+     isUndef = self.isUndef = function (a) { return typeof a === 'undefined'; },
+     isNode = self.isNode = function (a) { return a instanceof Node; },
+     isJq = self.isJq = function (a) { return a instanceof jQuery; },
+     isNull = self.isNull = function (a) { return a === null; },
+     isFunc = self.isFunc = function (a) { return typeof a === 'function'; },
+     isObj = self.isObj = function (a) { return typeof a === 'object'; }
      ;
 
    $(document).ready(setup);
    return self;
-})(); // }}}
+}()); // }}}
 

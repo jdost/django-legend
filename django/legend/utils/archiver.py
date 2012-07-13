@@ -9,6 +9,12 @@ import legend.gallery.models as gallery
 
 
 def entry_archive(entry_id):
+    '''
+    This is an archiving script to take an <Entry> object that is about to be
+    deleted and store it's information in a .json file that get tarred up
+    and gzipped.  These are all stored in an archive folder.  It is part of
+    my habit on being a data hoarder.
+    '''
     from markdown import markdown
 
     entry = journal.Journal.objects.get(id=entry_id)
@@ -32,10 +38,14 @@ def entry_archive(entry_id):
 
     archive(entry.url + ".tar.gz", "entry")
     os.remove(entry.url + ".json")
-#entry.delete()
 
 
 def tag_archive(tag_id):
+    '''
+    This is an archiving script for the <Tag> object.  It creates a .json file
+    that summarizes the properties of the <Tag> object and puts it into a nice
+    gzipped tarball before the object gets removed from the DB.
+    '''
     tag = journal.Tag.objects.get(id=tag_id)
     entries = tag.journal_set.all()
     data_file = open(tag.url + ".json", "w")
@@ -53,11 +63,15 @@ def tag_archive(tag_id):
 
     archive(tag.url + ".tar.gz", "tag")
     os.remove(tag.url + ".json")
-#tag.clear()
-#tag.delete()
 
 
 def image_archive(image_id):
+    '''
+    This is an archiving script for the <Image> object.  This is called when
+    the object is to be deleted.  It will store the properties of the object
+    into a .json file and then copy the static images (original and thumb)
+    into a gzipped tarball to be stored in the central archive folder.
+    '''
     from markdown import markdown
 
     image = gallery.Image.objects.get(id=image_id)
@@ -96,6 +110,13 @@ def image_archive(image_id):
 
 
 def album_archive(album_id):
+    '''
+    This is an archiving script for the <Album> object.  This will store
+    the album information into a .json file.  This also loops over all of
+    the <Image> objects associated with this <Album> and store their
+    information in the JSON file as well.  All of the images then get added
+    to the final tarball and get transferred to the archive folder.
+    '''
     from markdown import markdown
 
     album = gallery.Album.objects.get(id=album_id)
@@ -108,7 +129,7 @@ def album_archive(album_id):
         },
         "cover": album.get_cover_url(),
         "url": album.get_absolute_url()
-    }, album.url + ".json", indent=3)
+    }, data_file, indent=3)
     data_file.close()
 
     tarball = tarfile.open(album.url + ".tar.gz", "w:gz")
@@ -144,8 +165,15 @@ def album_archive(album_id):
 
     archive(album.url + ".tar.gz", "album")
     os.remove(album.url + ".json")
-    os.remove(base)
+
+    os.rmdir(os.path.join(base, s.THUMBNAIL_DIR))
+    os.rmdir(base)
 
 
 def archive(tar_name, archive_type):
+    '''
+    This just copies the prepared tarball to the archive folder for the
+    specified <archive_type> (which is something like "image", "album",
+    etc.)
+    '''
     os.rename(tar_name, os.path.join(s.ARCHIVE_LOC, archive_type, tar_name))

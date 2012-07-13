@@ -1,22 +1,19 @@
 /**
- * this is just tracking the URL with push states or
- * hash/bangs, not actually tracking the user
- */
+this is just tracking the URL with push states or
+hash/bangs, not actually tracking the user
+**/
 (function () {
-   if (typeof window.utils !== 'object') {
-      return;
-   } else if (typeof window.utils.tracker !== 'undefined') {
-      return;
-   }
+   if (typeof window.utils !== 'object') { return; }
+   if (typeof window.utils.tracker !== 'undefined') { return; }
 
-   var self = {}
-     , pusher
-     , reqs = {}
-     , handler
-     , current = 0
-     , stack = []
-     , initial
-     , setup = function () {
+   var self = {},
+      pusher,
+      reqs = {},
+      handler,
+      current = 0,
+      stack = [],
+      initial,
+     setup = function () {
       utils.loaded({ name: "utils.tracker" });
       // test for type support
       if (utils.isUndef(window.history.pushState)) {
@@ -25,8 +22,8 @@
          pusher = window.history;
          window.addEventListener('popstate', popHandler);
       }
-   }
-     , popHandler = function (event) {
+   },
+     popHandler = function (event) {
       var state = event.state || initial;
       if (current > 0 && state === stack[current-1]) {
          current--;
@@ -37,11 +34,11 @@
       }
       var key = state || window.location.pathname;
       handler(translate(key), reqs[translate(key)] || null);
-   }
-     , init = self.initialize = def({
-      context : $("body")
-   ,  handler : null
-   ,  initial : {}
+   },
+     init = self.initialize = def({
+      context: $("body"),
+      handler: null,
+      initial: {}
    }, function (settings) {
       if (!utils.isFunc(settings.handler)) {
          return;
@@ -52,10 +49,10 @@
       handler = settings.handler;
       settings.context.on("click", "a", handleChange);
       reqs[translate(stack[current])] = settings.initial;
-   })
-     , convertLinks = self.convert = def({
-      context : $("body")
-   ,  handler : null
+   }),
+     convertLinks = self.convert = def({
+      context: $("body"),
+      handler: null
    }, function (settings) {
       if (!utils.isJq(settings.context)) {
          settings.context = $(settings.context);
@@ -73,14 +70,15 @@
          link.click(function (event) {
             event.preventDefault();
             jQuery.ajax({
-               data : { 'JSON' : '' }
-            ,  dataType : 'json'
-            ,  url      : target
-            ,  success  : function (data, status, XHR) {
+               data: { 'JSON': '' },
+               dataType: 'json',
+               url: target,
+               success: function (data, status, XHR) {
                   var name = translate(target);
                   dataHistory[name] = data;
                   handler[name] = settings.handler;
                   pusher.pushState(name, name, target);
+
                   if (!utils.isFunc(settings.handler)) { return; }
                   settings.handler(name, data);
                }
@@ -102,13 +100,14 @@
             }
          }
          jQuery.ajax({
-               data : { 'JSON' : '' }
-            ,  dataType : 'json'
-            ,  url      : target
-            ,  success  : function (data, status, XHR) {
+               data: { 'JSON': '' },
+               dataType: 'json',
+               url: target,
+               success: function (data, status, XHR) {
                   dataHistory[name] = data;
                   handler[name] = settings.handler;
                   pusher.pushState(name, name, target);
+
                   if (!utils.isFunc(settings.handler)) { return; }
                   settings.handler(name, data);
                }
@@ -118,17 +117,16 @@
 
       settings.context.on("click", "a", handle);
       return;
-      if (settings.context.get(0).nodeName === "A") {
+/*    if (settings.context.get(0).nodeName === "A") {
          convert(0, settings.context);
       } else {
          settings.context.find("a").each(convert);
       }
-   })
-     , handleChange = function (event) {
+*/
+   }),
+     handleChange = function (event) {
       var target = $(this).attr("href");
-      if (target.match(/^http:\/\//)) {
-         return;
-      }
+      if (target.match(/^http:\/\//)) { return; }
 
       event.preventDefault();
       // check if back
@@ -149,17 +147,17 @@
       }
 
       jQuery.ajax({
-            data     : { 'JSON' : '' }
-         ,  dataType : 'json'
-         ,  url      : target
-         ,  success  : function (data, status, XHR) {
+         data: { 'JSON': '' },
+         dataType: 'json',
+         url: target,
+         success: function (data, status, XHR) {
             reqs[name] = data;
             pusher.pushState(target, name, target);
             handler(name, data);
          }
       });
-   }
-     , translate = self.translate = function (base) {
+   },
+     translate = self.translate = function (base) {
       return base.substr(1,base.length-2).replace(/\//g,":");
    }
      ;
@@ -169,4 +167,4 @@
    $(document).ready(setup);
 
    window.utils.tracker = self;
-}) ();
+}());
