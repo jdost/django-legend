@@ -7,7 +7,7 @@ def about(request):
     This is a simple 'static' view that just adds in the static about.html
     template into the base.
     '''
-    return response(request, ABOUT, {"title": ABOUT["title"]})
+    return response(request, ABOUT, { "title": ABOUT['title'] })
 
 
 def admin(request):
