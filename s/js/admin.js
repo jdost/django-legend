@@ -1,245 +1,204 @@
-window.admin = (function () { // {{{
-   var self = this
-     , nodes
-     , cards
-     , setup = function () { // {{{
-      nodes = { // {{{
-         "nav"  : $("#nav")
-      ,  "body" : $("#body")
-      ,  "js"   : $("#scripts")
-      ,  "css"  : $("#styles")
-      }; // }}}
+var ui = {
+   nav: (function(node) {
+      var self = {},
+         shown = true;
+      var holder = $(document.createElement("div"))
+         .html("&nbsp;")
+         .addClass("navHolder holder")
+         .insertAfter(node);
 
-      utils.loadStyle({ name: "navigation", path: "navigation" });
-      utils.loadStyle({ name: "cards", path: "cards" });
-      utils.loadStyle({ name: "authentication", path: "authenticate" });
-      utils.loaded({name: "admin"});
-      cards = ui.cards({
-         name      : "admin"
-      ,  container : nodes.body
-      });
+      self.show = function () {
+         if (shown) { return self; }
+         shown = true;
+         node.animate({ top: 0 });
+         holder.slideDown();
 
-      authenticate();
-   } // }}}
-     , AUTH_LOC = '/ws/verify/'
-     , authenticate = function () {
-      var checkOrBuild = function (response) {
-         if (response.XHR.status === 202)
+         return self;
+      };
+      self.hide = function () {
+         if (!shown) { return self; }
+         shown = false;
+         node.animate({ top: node.outerHeight(true)*-1 });
+         holder.slideUp();
+
+         return self;
+      };
+
+      self.add = function (opts) {
+         if (typeof opts !== 'object') {
             return;
-         var failed = false;
-         var auth = $(utils.make('input'))
-            .addClass('auth')
-            .attr({
-               'type'        : 'input'
-            ,  'placeholder' : 'computer name'
-            ,  'name'        : 'name'
-            }).keypress(function (event) {
-               var checkAuth = function (response) {
-                  console.log(response);
-                  if (response.XHR.status !== 202) {
-                     auth.val("").addClass("failed");
-                     failed = true;
+         }
+
+         var i, l;
+         var hideSubs = function () {
+            subsShown = false;
+            subs.animate({ width: 0 }, function () { subs.hide(); });
+         },
+            showSubs = function () {
+            subsShown = true;
+            subs.show().animate({ width: natWidth });
+         };
+
+         var button = $(document.createElement("a"))
+            .click(function () {
+               if (opts.sublabels) {
+                  if (subsShown) {
+                     hideSubs();
                   } else {
-                     node.remove();
+                     showSubs();
                   }
-               };
-               if (failed) {
-                  auth.removeClass("failed");
-                  failed = false;
+               } else {
+                  opts.handler.msg(opts.label);
                }
+            })
+            .text(opts.label)
+            .insertBefore(header);
 
-               if (event.keyCode === 13) {
-                  moduleHandler.request({
-                     target   : AUTH_LOC
-                  ,  data     : { "name": auth.val() }
-                  ,  callback : checkAuth
-                  ,  type     : 'POST'
-                  });
-               }
-            });
-         var node = $(utils.make('div'))
-            .addClass('authHolder')
-            .append($(utils.make('div'))
-               .addClass('authWindow')
-               .append(auth)
+         var subsShown = false;
+         if (!opts.sublabels || opts.sublabels.length === 0) {
+            return;
+         }
+
+         var subs = $(document.createElement("ul"))
+            .addClass("subs")
+            .insertAfter(button);
+         _.each(opts.sublabels, function (sub) {
+            subs.append($(document.createElement("li"))
+               .append($(document.createElement("a"))
+                  .text(sub)
+                  .click(function () {
+                     opts.handler.msg(sub);
+                     hideSubs();
+                  })
+               )
             );
-
-         $("body").append(node);
-         utils.center(auth.parent());
-      };
-
-      moduleHandler.request({
-         target   : AUTH_LOC
-      ,  callback : checkOrBuild
-      });
-   }
-     , nav = (function () { // {{{
-      var links = {}
-        , active
-        , addOption = def({
-         "name"   : "Unnamed"
-      ,  "label"  : "section_name"
-      ,  "module" : null
-      ,  "subs"   : []
-      }, function (settings) { // {{{
-         if (typeof links[settings.name] !== 'undefined') {
-            return;
-         }
-
-         var option = {
-            "node"   : $(utils.make("a"))
-               .addClass("navLink")
-               .click(function (data) {
-                  showSubs({"link": option, "data": data});//openLink({"link": option, "data": data});
-               })
-               .text(settings.label)
-         ,  "subs"   : settings.subs
-         ,  "module" : settings.module
-         };
-         links[settings.name] = option;
-
-         nodes.nav.append(option.node);
-      }) // }}}
-        , removeOption = def({
-         "name" : "Unnamed"
-      }, function (settings) { //{{{
-         var target = links[settings.name];
-         if (typeof target === 'undefined') {
-            return;
-         }
-
-         target.node.remove();
-         delete links[settings.name];
-      }) // }}}
-        , subsVis = false
-        , showSubs = def({
-         "link" : null
-      ,  "data" : {}
-      }, function (settings) {
-         if (settings.link === null) {
-            return;
-         }
-
-         if (settings.link.subs.length === 1) {
-            openLink({"link": settings.link, "module": settings.link.module, "data": settings.data});
-            return;
-         } else if (subsVis) {
-            return;
-         }
-         subsVis = true;
-
-         var makeSub = function (sub) {
-            var el = $(utils.make("a"))
-               .addClass("sub")
-               .text(sub.name)
-               .click(function (data) {
-                  subHolder.animate({ left: -1*subHolder.outerWidth() }, {
-                     duration : 'fast'
-                  ,  complete : function () {
-                     subHolder.remove();
-                     }
-                  });
-                  openLink({"link": settings.link, "module": settings.link.module, "data": data, "option": sub.option});
-               });
-            return el;
-         };
-
-         var subHolder = $(utils.make("div"))
-            .addClass("subChoices");
-
-         for (var i = 0, l = settings.link.subs.length; i < l; i++) {
-            var sub = settings.link.subs[i];
-            subHolder.append(makeSub(sub));
-         }
-
-         nodes.nav.append(subHolder);
-         subHolder.css({ left: -1*subHolder.outerWidth() }).animate({ left: 0 });
-      })
-        , openLink = def({
-         "module" : null
-      ,  "data"   : {}
-      }, function (settings) { // {{{
-         if (utils.isUndef(settings.link) || settings.module === null) {
-            return;
-         }
-
-         if (typeof active !== 'undefined') {
-            active.removeClass("active");
-         }
-         active = settings.link.node;
-         active.addClass("active");
-
-         loadModule({
-            "module" : settings.module
-         ,  "option" : settings.option
          });
-         subsVis = false;
-      }) // }}}
-        ;
 
-      return {
-         add    : addOption
-      ,  remove : removeOption
+         var natWidth = subs.css("width");
+         subs.css("width", 0).hide();
+
+         return self;
       };
-   })() // }}}
 
-     , loadModule = def({
-         "module" : null
-   }, function (settings) { // {{{
-      if (settings.module === null) {
+      var header = $(document.createElement("h1"))
+         .addClass("header")
+         .appendTo(node)
+         .text("admin");
+
+      self.title = function (title) {
+         var headerOpacity = header.css("opacity");
+
+         header.animate({ opacity: 0 }, {
+            duration: 100,
+            complete: function () {
+               header.text(title).animate({
+                  opacity: headerOpacity
+               }, {
+                  duration: 100
+               });
+            }
+         });
+
+         return self;
+      };
+
+      return self;
+   }($("#nav"))),
+
+   body: (function (node) {
+      var self = {},
+         onChange = null;
+
+      self.set = function (contents, closer) {
+         if (typeof onChange === 'function') {
+            onChange();
+         }
+         onChange = closer;
+
+         node.contents().fadeOut('fast', function () {
+            node.empty().append(contents).contents().hide().fadeIn('fast');
+         });
+
+         return self;
+      };
+
+      return self;
+   }($("#body"))),
+
+   footer: (function(node) {
+      var self = {},
+         shown = false,
+         contents;
+      var holder = $(document.createElement("div"))
+         .html("&nbsp;")
+         .addClass("footerHolder holder")
+         .insertAfter(node);
+
+      self.show = function () {
+         if (shown) { return self; }
+
+         shown = true;
+         node.animate({ bottom: 0 });
+         holder.slideUp();
+
+         return self;
+      };
+      self.hide = function () {
+         if (!shown) { return self; }
+
+         shown = false;
+         node.animate({ bottom: node.outerHeight(true)*-1 });
+         holder.slideDown();
+
+         return self;
+      };
+
+      self.set = function (contents_) {
+         if (contents) {
+            contents.fadeOut('fast', function () {
+               contents.remove();
+               node.append(contents_);
+               contents = contents_;
+            });
+         } else {
+            node.append(contents_);
+            contents = contents_;
+         }
+
+         return self;
+      };
+
+      return self;
+   }($("#footer")))
+};
+
+var auth = (function () {
+   var AUTH_URL = WS_PREFIX + '/verify/';
+
+   var make = function (t) { return $(document.createElement(t)); };
+   var authenticated = false;
+
+   var body = function () {
+      var node = make("div");
+
+      return node;
+   };
+
+   // test
+   jQuery.ajax({
+      async: false,
+      url: AUTH_URL,
+      success: function (data, status, XHR) {
+         authenticated = true;
+      }
+   });
+
+   return function () {
+      if (authenticated) {
          return;
       }
 
-      settings.module.load({
-         "container" : cards
-      ,  "handler"   : moduleHandler
-      ,  "option"    : settings.option
-      });
-   }) // }}}
-     , dataRequest = def({
-      "target"   : ""
-   ,  "data"     : {}
-   ,  "type"     : 'GET'
-   ,  "callback" : null
-   }, function (settings) { // {{{
-      jQuery.ajax({
-         data     : settings.data
-      ,  dataType : 'json'
-      ,  type     : settings.type
-      ,  url      : settings.target
-      ,  success  : function (data, status, XHR) {
-            if (typeof settings.callback !== 'function') { return; }
-            settings.callback({
-               "data"   : data
-            ,  "status" : status
-            ,  "XHR"    : XHR
-            });
-         }
-      ,  error    : function (XHR, status, error) {
-            settings.callback({
-               "error"  : error
-            ,  "status" : status
-            ,  "XHR"    : XHR
-            });
-         }
-      });
-   }) // }}}
-     , moduleHandler = (function () { // {{{
-         return { // {{{
-            loadStyle     : utils.loadStyle
-         ,  unloadStyle   : utils.unloadStyle
-
-         ,  loadScript    : utils.loadScript
-         ,  unloadScript  : utils.unloadScript
-         ,  request       : dataRequest
-         }; // }}}
-      })() // }}}
-     ;
-
-   $(document).ready(setup);
-
-   return {
-      navigation : nav
+      ui.nav.hide();
+      ui.footer.hide();
    };
-})(); // }}}
-
+}());

@@ -1,251 +1,419 @@
-(function () {
-   if (typeof window.gallery === 'object') {
-      return;
-   }
+var gallery = (function () {
+  var self = {},
+    action = {},
+    WS = {
+      "ALBUM": WS_PREFIX + "/album/",
+      "IMAGES": WS_PREFIX + "/images/"
+    };
 
-   var self = {}
-     , LOC = {
-      GALLERY   : "/ws/gallery/"
-   }
-     , handler
-     , container
-     , setup = function () {
-      utils.require({
-         name     : "admin",
-         path     : "admin",
-         callback : function () {
-            admin.navigation.add({
-               name   : "gallery"
-            ,  label  : "Gallery"
-            ,  module : window.gallery
-            ,  subs   : [{
-                  name   : "default"
-               ,  option : "gallery"
-               }]
-            });
-         },
-      });
+  self.msg = function () {
+    gallery.browser();
+  };
 
-      utils.require({ name: "gallery.browser", path: "admin/gallery/browser" });
-      utils.loadStyle({ name: "gallery", path: "gallery" });
+  var modified = true,
+    albums;
+  self.getAlbums = function (callback) {
+    if (typeof callback !== 'function') { return; }
 
-      utils.loaded({name: "gallery"});
-   }
-     , load = self.load = def({
-      "container" : null
-   ,  "handler"   : null
-   }, function (settings) {
-      if (settings.container === null || settings.handler === null) {
-         return;
+    if (!modified) {
+      callback(albums);
+      return modified;
+    }
+
+    jQuery.ajax({
+      dataType: 'json',
+      type: 'GET',
+      url: WS.ALBUM,
+      success: function (data, status, XHR) {
+        callback(data.album_set);
       }
+    });
+  };
 
-      handler = settings.handler;
-      container = settings.container;
-      container.close();
+  self.getImages = function (id, callback) {
+    if (typeof callback !== 'function') { return; }
+    if (typeof id === 'undefined') { return; }
 
-      gallery.browser.build({
-         container : container
-      ,  handler   : hInterface
+    jQuery.ajax({
+      dataType: 'json',
+      type: 'GET',
+      url: WS.IMAGES + id + "/",
+      success: function (data, status, XHR) {
+        callback(data.images);
+      }
+    });
+  };
+
+  self.saveAlbum = function (id, album, callback) {
+    if (typeof album !== 'object') { return; }
+
+    if (typeof album.images !== 'undefined') {
+      album.images = JSON.stringify(album.images);
+    }
+
+    jQuery.ajax({
+      type: "POST",
+      data: album,
+      url: WS.ALBUM + (typeof id === 'undefined' ? "" : id + "/"),
+      success: function (data, status, XHR) {
+        if (typeof callback === 'function') {
+          callback(data, status, XHR);
+        }
+      }
+    });
+  };
+
+  self.deleteAlbum = function (id) {
+    if (typeof id === 'undefined') { return; }
+
+    jQuery.ajax({
+      type: 'DELETE',
+      url: WS.ALBUM + id + "/"
+    });
+  };
+
+  self.deleteImage = function (id) {
+    if (typeof id === 'undefined') { return; }
+
+    jQuery.ajax({
+      type: "DELETE",
+      url: WS.IMAGES + id + "/"
+    });
+  };
+
+  ui.nav.add({
+    handler: self,
+    label: 'gallery'
+  });
+
+  return self;
+}());
+
+gallery.browser = (function () {
+  var make = function (e) { return $(document.createElement(e)); };
+  var table;
+
+  var body = function () {
+    table = make("div")
+      .addClass("gallery browser");
+
+    make("a")
+      .addClass("album")
+      .append(make("h6")
+        .addClass("title")
+        .text("Create Album")
+      )
+      .click(function () {
+        gallery.editor();
+      })
+      .appendTo(table);
+
+    var addAlbums = function (albums) {
+      _.each(albums, function (album) {
+        var node = make("a")
+          .addClass("album");
+        make("h6")
+          .addClass("title")
+          .text(album.name)
+          .appendTo(node);
+        make("p")
+          .addClass("description")
+          .text(album.description)
+          .appendTo(node);
+
+        node.click(function () {
+          gallery.editor(album);
+        });
+
+        table.append(node);
       });
+    };
 
-      return self;
-   })
+    gallery.getAlbums(addAlbums);
+    return table;
+  };
 
-     , LOCS = {
-      ALBUMS : "/ws/album/"
-   ,  IMAGES : "/ws/images/"
-   }
-     , hInterface = {
-         albumList : def({
-         "callback" : null
-      }, function (settings) {
-         var parseData = function (response) {
-            if (response.status === 'error') {
-               notify.add({
-                  name    : "albumError"
-               ,  message : "Retrieving Albums Error: " + response.error
-               ,  classes : "error"
-               });
-               return;
-            }
-            var dataSet = response.data.album_set
-              ;
+  var cleanup = function () {
 
-            settings.callback(dataSet);
-         };
+  };
 
-         handler.request({
-            target     : LOCS.ALBUMS
-         ,  callback   : utils.isNull(settings.callback) ? null : parseData
-         });
+  return function () {
+    ui.nav.title('browse albums');
+    ui.body.set(body(), cleanup);
+    ui.footer.hide();
+  };
+}());
+
+gallery.editor = (function () {
+  var make = function (e) { return $(document.createElement(e)); };
+  var album,
+    inputs = [],
+    main;
+
+  var body = function () {
+    main = make("div")
+      .addClass("gallery editor");
+
+    var form = make("form").appendTo(main);
+
+    inputs.push(make("input")
+      .attr({
+        name: "name",
+        type: "text",
+        placeholder: "Album Name"
       })
-      ,  getAlbum : def({
-         "id"       : null
-      ,  "callback" : null
-      }, function (settings) {
-         if (utils.isNull(settings.id)) {
-            return;
-         }
-         var parseData = function (response) {
-            if (response.status === 'error') {
-               notify.add({
-                  name    : "albumError"
-               ,  message : "Retrieving Album #" + settings.id
-                     + " Failed: " + response.error
-               ,  classes : "error"
-               });
-               return;
-            }
-            var dataSet = response.data.album
-              ;
+      .addClass("name")
+      .val(album.name)
+      .appendTo(form));
 
-            settings.callback(dataSet);
-         };
-
-         handler.request({
-            target      : LOCS.ALBUMS + settings.id.toString() + "/"
-         ,  callback    : utils.isNull(settings.callback) ? null : parseData
-         });
+    inputs.push(make("textarea")
+      .attr({
+        name: "description",
+        placeholder: "Album description"
       })
-      ,  submitAlbum : def({
-         "id"       : null
-      ,  "data"     : null
-      }, function (settings) {
-         var notifier = function (response) {
-            if (response.status === "error") {
-               notify.add({
-                  name    : "albumError"
-               ,  message : "Submitting Album Failed: " + response.error
-               ,  classes : "error"
-               });
-            } else {
-               notify.add({
-                  name    : "albumSubmission"
-               ,  message : "Album Info Submitted"
-               });
-            }
-         };
+      .addClass("description")
+      .html(album.description)
+      .appendTo(form));
 
-         handler.request({
-            target   : LOCS.ALBUMS + (utils.isNull(settings.id) ? "" : settings.id + "/")
-         ,  data     : settings.data
-         ,  type     : 'POST'
-         ,  callback : notifier
-         });
+    inputs.push(make("input")
+      .attr({
+        name: "cover",
+        type: "hidden"
       })
-      ,  deleteAlbum : def({
-         "id"  : null
-      }, function (settings) {
-         if (utils.isNull(settings.id)) {
-            return;
-         }
+      .val(album.cover)
+      .appendTo(form));
 
-         var notifier = function (response) {
-            if (response.status === "error") {
-               notify.add({
-                  name     : "albumError"
-               ,  message  : "Deleting Album #" + settings.id.toString()
-                     + " Failed: " + settings.error
-               ,  classes  : "error"
-               });
-            } else {
-               notify.add({
-                  name     : "albumDeletion"
-               ,  message  : "Album #" + settings.id.toString() + " Deleted."
-               });
-            }
-         };
+    var images = make("div")
+      .addClass("images")
+      .appendTo(main);
 
-         handler.request({
-            target   : LOCS.ALBUMS + settings.id.toString() + "/"
-         ,  type     : 'DELETE'
-         ,  callback : notifier
-         });
+    if (album.id) {
+      gallery.getImages(album.id, function(images_) {
+        album.images = images_;
+
+        _.each(album.images, function (image) {
+          var editImage = function () {
+            captioner(image);
+          };
+
+          var node = make("div")
+            .addClass("image");
+
+          if (image.caption.length > 0) {
+            node.addClass("captioned");
+          }
+
+          make("img")
+            .addClass("thumbnail")
+            .attr("src", image.thumbnail)
+            .click(editImage)
+            .appendTo(node);
+
+          image.dirty = false;
+          image.node = node;
+
+          images.append(node);
+        });
+      });
+    }
+
+    return main;
+  };
+
+  var captioner = function (image) {
+    var node = make("div")
+        .addClass("gallery captioner"),
+      foot = make("div")
+        .addClass("gallery captioner")
+      ;
+    var inputs = {};
+
+    var close = function () {
+      main.show();
+      node.fadeOut(function () {
+        node.remove();
+        ui.nav.show();
+      });
+      ui.footer.set(footer());
+    };
+
+    make("img")
+      .attr({
+        "src": image.url
       })
-      , getImages : def({
-         "id"        : null
-      ,  "callback"  : null
-      }, function (settings) {
-         if (utils.isNull(settings.id)) {
-            return;
-         }
-         var parseData = function (response) {
-            if (response.status === 'error') {
-               notify.add({
-                  name     : "imageError"
-               ,  message  : "Retrieving Images for Album #" + settings.id
-                     + " Failed: " + response.error
-               ,  classes  : "error"
-               });
-               return;
-            }
-            var dataSet = response.data
-              ;
+      .addClass("full")
+      .appendTo(node);
 
-            settings.callback(dataSet);
-         };
-
-         handler.request({
-            target   : LOCS.IMAGES + settings.id.toString() + "/"
-         ,  callback : utils.isNull(settings.callback) ? null : parseData
-         });
+    inputs.caption = make("textarea")
+      .attr({
+        "name": "caption",
+        "id": "caption",
+        "placeholder": "Enter image caption here"
       })
-      , submitImage : def({
-         "id"     : null
-      ,  "data"   : null
-      }, function (settings) {
-         if (utils.isNull(settings.id) || utils.isNull(settings.data)) {
-            return;
-         }
+      .val(image.caption);
 
-         var notifier = function (response) {
-            if (response.status === "error") {
-               notify.add({
-                  name     : "imageError"
-               ,  message  : "Submitting Image #" + settings.id.toString() + " Failed: " + response.error
-               ,  classes  : "error"
-               });
-            } else {
-               notify.add({
-                  name     : "imageSubmission"
-               ,  message  : "Image #" + settings.id.toString() + " Updated"
-               });
-            }
-         };
+    make("div")
+      .addClass("center")
+      .append(inputs.caption)
+      .appendTo(foot);
 
-         handler.request({
-            target   : LOCS.IMAGES + settings.id.toString() + "/"
-         ,  data     : settings.data
-         ,  type     : 'POST'
-         ,  callback : notifier
-         });
+    var dState = 0;
+    make("a")
+      .addClass("delete")
+      .text("Delete")
+      .click(function (event) {
+        dState++;
+        var $this = $(this);
+
+        if (dState === 1) {
+          $this.text($this.text() + "?");
+          return;
+        }
+
+        gallery.deleteImage(image.id);
+        close();
       })
-      , deleteImage : def({
-         "id"  : null
-      }, function (settings) {
-         if (utils.isNull(settings.id)) {
-            return;
-         }
+      .appendTo(foot);
 
-         var notifier = function (response) {
-            notify.add({
-               name     : "imageDeletion"
-            ,  message  : "Deleting Image: " + (response.error ? "failed" : "successful")
-            ,  classes  : response.error ? "error" : "success"
-            });
-         };
+    if (album.cover !== image.thumbnail) {
+      make("a")
+        .addClass("cover")
+        .text("Make Album Cover")
+        .click(function (event) {
+          album.cover = image.thumbnail;
+          var filename = image.thumbnail.split('/');
+          main.find(":hidden[name=cover]").val(filename.pop());
+          $(this).remove();
+        })
+        .appendTo(foot);
+    }
 
-         handler.request({
-            target    : LOCS.IMAGES + settings.id.toString() + "/"
-         ,  data      : {}
-         ,  type      : 'DELETE'
-         ,  callback  : notifier
-         });
+    make("a")
+      .addClass("cancel")
+      .text("Cancel")
+      .click(function (event) {
+        close();
       })
-      , UPLOAD_URL : LOCS.ALBUMS
-   }
-     ;
+      .appendTo(foot);
 
-   $(document).ready(setup);
-   window.gallery = self;
-})();
+    make("a")
+      .addClass("save")
+      .text("Save")
+      .click(function (event) {
+        if (image.caption !== inputs.caption.val()) {
+          image.dirty = true;
+          image.caption = inputs.caption.val();
+          if (image.caption.length > 0) {
+            image.node.addClass("captioned");
+          }
+        }
+        close();
+      })
+      .appendTo(foot);
+
+    ui.footer.set(foot);
+    ui.nav.hide();
+    node.hide().fadeIn().insertBefore(main);
+    main.hide();
+  };
+
+  var data = function () {
+    var output = {};
+    _.each(inputs, function (input) {
+      output[input.attr("name")] = input.val();
+    });
+
+    output.images = [];
+    _.each(album.images, function (image) {
+      if (image.dirty) {
+        output.images.push({
+          id: image.id,
+          caption: image.caption
+        });
+      }
+    });
+
+    return output;
+  };
+
+  var cleanup = function () {
+  };
+
+  var footer = function () {
+    var container = make("div")
+      .addClass("gallery editor");
+
+    make("a")
+      .text("save")
+      .click(function () {
+        gallery.saveAlbum(album.id, data());
+      })
+      .appendTo(container);
+
+    var dState = 0;
+    make("a")
+      .text("delete")
+      .click(function () {
+        dState++;
+        $this = $(this);
+
+        if (dState === 1) {
+          $this.text($this.text() + "?");
+          return;
+        }
+
+        gallery.deleteAlbum(album.id);
+        gallery.browser();
+      })
+      .appendTo(container);
+
+    var uploader = (function () {
+      var IFRAME_ID = "IMAGE_UPLOAD_IFRAME";
+
+      var node = make("div")
+        .addClass("uploader");
+
+      var form = make("form")
+        .attr({
+          "method": "POST",
+          "enctype": "multipart/form-data",
+          "action": WS_PREFIX + "/album/" + album.id + "/",
+          "target": IFRAME_ID
+        }).appendTo(node);
+
+      make("iframe")
+        .attr("id", IFRAME_ID)
+        .appendTo(node);
+
+      make("input")
+        .attr({
+          "type": "file",
+          "name": "images"
+        })
+        .change(function (event) {
+          form.submit();
+        })
+        .appendTo(form);
+
+      return node;
+    }()).appendTo(container);
+
+    if (typeof album.id === 'undefined') {
+      uploader.hide();
+    }
+
+    return container;
+  };
+
+  return function (album_) {
+    album = (typeof album_ === 'undefined') ? {
+      name: "",
+      description: "",
+      cover: ""
+    } : album_;
+
+    ui.nav.title('edit: ' + album.name);
+    ui.body.set(body(), cleanup);
+    ui.footer.show().set(footer());
+  };
+}());

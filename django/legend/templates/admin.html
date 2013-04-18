@@ -1,39 +1,31 @@
 <html>
    <head>
-      <title> Jeff | admin </title>
-
-      <script type="text/javascript" src="{{ page.values.STATIC }}/js/lib/jQuery"></script>
-      <script type="text/javascript" src="{{ page.values.STATIC }}/js/utils.js"></script>
+      <title>Admin Mock</title>
+      <link rel="stylesheet" type="text/less" href="/s/less/admin.less" />
       <script type="text/javascript">
-         window.page = {
-            static_root : "{{ page.values.STATIC }}"
-         }
+         var WS_PREFIX = '/ws';
       </script>
-
-      <link rel="stylesheet" type="text/css" href="{{ page.values.STATIC }}/css/admin.css" />
-
    </head>
    <body>
       <div id="nav"></div>
-      <div id="body"></div>
 
-      <div id="scripts"></div>
-      <div id="styles"></div>
+      <div id="body">
+      </div>
 
+      <div id="footer"></div>
+
+      <script type="text/javascript" src="/s/js/lib/jQuery"></script>
+      <script type="text/javascript" src="/s/js/lib/less"></script>
+      <script type="text/javascript" src="/s/js/lib/underscore"></script>
+      <script type="text/javascript" src="/s/js/lib/showdown"></script>
+      <script type="text/javascript" src="/s/js/admin.js"></script>
+      <script type="text/javascript" src="/s/js/admin/journal.js"></script>
+      <script type="text/javascript" src="/s/js/admin/gallery.js"></script>
       <script type="text/javascript">
-         $(document).ready(function () {
-            utils.init({
-               javascript: page.static_root + "/js/",
-               stylesheet: page.static_root + "/css/admin/",
+         $(document).ready(less.watch)
+            .ready(function () {
+               auth();
             });
-            window.ui = {};
-            utils.require({ name: "ui.cards", path: "ui/cards" });
-            utils.require({ name: "ui.multiselect", path: "ui/multiselect" });
-            utils.require({ name: "admin", path: "admin" });
-            utils.require({ name: "notify", path: "notify" });
-            utils.require({ name: "journal", path: "admin/journal" });
-            utils.require({ name: "gallery", path: "admin/gallery" });
-         });
       </script>
    </body>
 </html>
