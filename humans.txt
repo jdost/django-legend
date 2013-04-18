@@ -1,0 +1,11 @@
+/* AUTHOR */
+Jeff
+twitter: @jdost_
+github: jdost
+location: Chicago, IL
+
+/* SITE */
+standards: HTML4, CSS3
+components: jQuery, Django, LESS
+software: vim
+browsers: Chrome/Chromium, Firefox, dwb

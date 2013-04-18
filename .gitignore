@@ -10,6 +10,7 @@ venv/*
 env/*
 s/js/lib/*
 s/img/*
+s/font/*
 archive
 *AUTH
 
